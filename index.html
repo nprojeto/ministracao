@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Despertos para a Presença</title>
+<meta name="description" content="Roteiro visual da ministração “Despertos para a Presença” — 02.10.2026">
+<meta property="og:title" content="Despertos para a Presença">
+<meta property="og:description" content="Roteiro visual da ministração — baseada em “Queimando no Secreto”">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400..700&family=DM+Sans:wght@400;600;700&display=swap">
+<style>
+/* ---- player ---- */
+html, body { margin: 0; height: 100%; background: #05080F; overflow: hidden; }
+body { font-family: 'DM Sans', Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+#stage { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+#deck { position: relative; width: 1920px; height: 1080px; flex-shrink: 0; transform-origin: center center; }
+#deck section { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; }
+#deck section:not(.active) { display: none; }
+#deck h1, #deck h2, #deck h3, #deck p { margin: 0; font-weight: inherit; }
+#deck h1, #deck h2, #deck h3 { font-weight: 600; }
+#deck aside { display: none; }
+#deck svg { display: block; }
+x-shape { display: block; flex-shrink: 0; }
+x-shape[kind="arrow-down"] { clip-path: polygon(30% 0, 70% 0, 70% 55%, 100% 55%, 50% 100%, 0 55%, 30% 55%); }
+x-shape[kind="arrow-right"] { clip-path: polygon(0 30%, 60% 30%, 60% 0, 100% 50%, 60% 100%, 60% 70%, 0 70%); }
+
+#bar { position: fixed; left: 0; bottom: 0; height: 5px; background: #E07A2E; transition: width 300ms ease; z-index: 5; }
+#hud { position: fixed; right: 18px; bottom: 14px; display: flex; gap: 8px; align-items: center; z-index: 6;
+        font: 600 14px 'DM Sans', Arial, sans-serif; color: #C9C2B4; opacity: 0; transition: opacity 300ms; }
+body.ui #hud { opacity: 1; }
+#hud button { background: rgba(26,36,54,.85); color: #F5EEE2; border: 1px solid #2E3A52; border-radius: 10px;
+               padding: 8px 12px; font: inherit; cursor: pointer; }
+#hud button:hover { background: #E07A2E; color: #0F1724; }
+#count { padding: 0 6px; min-width: 64px; text-align: center; }
+#notes { position: fixed; left: 0; right: 0; bottom: 0; max-height: 38vh; overflow: auto; z-index: 7;
+          background: rgba(10,16,32,.96); color: #F5EEE2; border-top: 3px solid #E07A2E;
+          padding: 20px 28px 64px; font: 18px/1.55 'DM Sans', Arial, sans-serif; white-space: pre-wrap; display: none; }
+body.notes #notes { display: block; }
+#notes .nt { font: 600 13px 'Oswald', Arial, sans-serif; letter-spacing: 3px; color: #F2C14E; text-transform: uppercase; margin-bottom: 8px; display: block; }
+#help { position: fixed; left: 18px; bottom: 14px; z-index: 6; font: 13px 'DM Sans', Arial, sans-serif; color: #8A93A6;
+         opacity: 0; transition: opacity 300ms; }
+body.ui #help { opacity: 1; }
+@media (max-width: 700px) { #help { display: none; } }
+
+/* ---- estilos do deck ---- */
+section {
+  background: #0F1724;
+  color: #F5EEE2;
+  font-family: 'DM Sans', Arial, sans-serif;
+  padding: 128px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+section.light { background: #F5EEE2; color: #1B2333; }
+section.ember { background: #E07A2E; color: #0F1724; }
+
+@keyframes rise { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0px); } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+.art { animation: fade 900ms ease-out both; }
+.a1 { animation: rise 600ms ease-out 100ms both; }
+.a2 { animation: rise 600ms ease-out 250ms both; }
+.a3 { animation: rise 600ms ease-out 400ms both; }
+.a4 { animation: rise 600ms ease-out 550ms both; }
+
+/* texto */
+.eyebrow { font-family: 'Oswald', Arial, sans-serif; font-size: 28px; font-weight: 500; letter-spacing: 4px; text-transform: uppercase; color: #F2C14E; }
+.light .eyebrow { color: #A04C14; }
+.t { font-family: 'Oswald', Arial, sans-serif; font-size: 88px; line-height: 1.05; font-weight: 600; text-transform: uppercase; color: #F5EEE2; }
+.light .t { color: #1B2333; }
+.hl { color: #F2C14E; }
+.ref { font-size: 28px; font-weight: 700; color: #F2C14E; background: #1E2A3E; padding: 12px 28px; border-radius: 40px; align-self: flex-start; }
+.light .ref { color: #8A4310; background: #E8DFCF; }
+.punch { font-size: 40px; line-height: 1.35; color: #D9D2C4; }
+.light .punch { color: #4A4339; }
+.g { color: #F2C14E; }
+.light .g { color: #A04C14; }
+.tag { font-size: 32px; line-height: 1.35; color: #F5EEE2; border-left: 6px solid #E07A2E; padding-left: 24px; }
+.light .tag { color: #1B2333; }
+
+/* slide visual: texto à esquerda, ilustração à direita */
+.split { display: flex; flex-direction: row; gap: 96px; align-items: center; height: 824px; }
+.txt { flex: 1; display: flex; flex-direction: column; gap: 32px; }
+.split .art { width: 760px; height: 760px; flex-shrink: 0; }
+
+/* capa */
+.cover-bg { position: absolute; left: 0px; top: 0px; width: 1920px; height: 1080px; }
+.cover-txt { position: absolute; left: 128px; top: 250px; width: 1150px; display: flex; flex-direction: column; gap: 32px; }
+.ct1 { font-family: 'Oswald', Arial, sans-serif; font-size: 140px; line-height: 1.0; font-weight: 700; text-transform: uppercase; color: #F5EEE2; }
+.cover-sub { font-size: 36px; color: #D9D2C4; }
+
+/* destaque */
+.stmt { display: flex; flex-direction: row; align-items: center; gap: 64px; height: 824px; }
+.stmt-txt { flex: 1; display: flex; flex-direction: column; gap: 40px; }
+.big { font-family: 'Oswald', Arial, sans-serif; font-size: 112px; line-height: 1.05; font-weight: 700; text-transform: uppercase; color: #0F1724; }
+.stmt-sub { font-size: 36px; line-height: 1.35; font-weight: 600; color: #2A1A10; }
+.stmt .art { width: 480px; height: 480px; flex-shrink: 0; }
+
+/* cartões */
+.cards { display: flex; flex-direction: row; gap: 48px; margin-top: 40px; }
+.card { flex: 1; display: flex; flex-direction: column; align-items: flex-start; gap: 24px; background: #1A2436; padding: 40px; border-radius: 32px; }
+.ct { font-family: 'Oswald', Arial, sans-serif; font-size: 44px; line-height: 1.1; font-weight: 600; text-transform: uppercase; color: #F5EEE2; }
+.cs { font-size: 28px; line-height: 1.35; color: #C9C2B4; }
+
+.declare { display: flex; flex-direction: column; gap: 8px; margin-top: 32px; }
+.dl { font-size: 24px; font-weight: 700; letter-spacing: 4px; color: #E07A2E; }
+.dq { font-family: 'Oswald', Arial, sans-serif; font-size: 44px; line-height: 1.2; font-weight: 500; color: #F2C14E; }
+.dref { color: #C9C2B4; }
+
+/* noite / manhã */
+.duo { display: flex; flex-direction: row; gap: 48px; margin-top: 40px; }
+.half { flex: 1; display: flex; flex-direction: column; gap: 24px; padding: 48px; border-radius: 32px; }
+.night { background: #1A2436; }
+.day { background: #F5EEE2; }
+.day .ct { color: #1B2333; }
+.day .cs { color: #4A4339; }
+
+/* Jacó */
+.pills { display: flex; flex-direction: row; gap: 32px; margin-top: 48px; }
+.pill { flex: 1; font-size: 36px; font-weight: 600; text-align: center; color: #1B2333; background: #E8DFCF; padding: 20px 24px; border-radius: 40px; }
+.downs { display: flex; flex-direction: row; justify-content: space-around; margin-top: 16px; }
+.dn { width: 56px; height: 72px; background: #E07A2E; }
+.bigpill { font-family: 'Oswald', Arial, sans-serif; font-size: 72px; font-weight: 700; text-transform: uppercase; text-align: center; color: #0F1724; background: #E07A2E; padding: 28px; border-radius: 40px; margin-top: 16px; }
+.jtag { font-size: 40px; font-weight: 600; text-align: center; color: #4A4339; margin-top: 24px; }
+
+/* corações (Éden) */
+.hearts { display: flex; flex-direction: row; align-items: center; gap: 32px; }
+.hr { width: 96px; height: 48px; background: #E07A2E; }
+
+</style>
+</head>
+<body class="ui">
+<div id="stage"><div id="deck">
+<section id="cover" class="cover" data-transition="fade">
+<svg class="cover-bg" viewBox="0 0 1920 1080" width="1920" height="1080" xmlns="http://www.w3.org/2000/svg" aria-label="Céu noturno com o sol nascendo atrás das montanhas"><defs><linearGradient id="cvs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#070B15"/><stop offset="0.55" stop-color="#16213A"/><stop offset="0.82" stop-color="#5B3A3A"/><stop offset="0.93" stop-color="#E07A2E"/><stop offset="1" stop-color="#F2C14E"/></linearGradient></defs><rect width="1920" height="1080" fill="url(#cvs)"/><circle cx="673" cy="164" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="108" cy="84" r="1.5" fill="#F5EEE2" opacity="0.5"/><circle cx="1203" cy="69" r="2" fill="#F5EEE2" opacity="0.35"/><circle cx="186" cy="454" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="502" cy="102" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="1703" cy="136" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="1294" cy="73" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="462" cy="57" r="2" fill="#F5EEE2" opacity="0.5"/><circle cx="868" cy="157" r="1.5" fill="#F5EEE2" opacity="0.8"/><circle cx="641" cy="195" r="1.5" fill="#F5EEE2" opacity="0.8"/><circle cx="1179" cy="202" r="2.5" fill="#F5EEE2" opacity="0.35"/><circle cx="1131" cy="74" r="1.5" fill="#F5EEE2" opacity="0.8"/><circle cx="431" cy="518" r="3" fill="#F5EEE2" opacity="0.5"/><circle cx="963" cy="474" r="2.5" fill="#F5EEE2" opacity="0.5"/><circle cx="518" cy="194" r="2" fill="#F5EEE2" opacity="0.35"/><circle cx="1186" cy="317" r="3" fill="#F5EEE2" opacity="0.5"/><circle cx="1503" cy="469" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="159" cy="130" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="1560" cy="360" r="2" fill="#F5EEE2" opacity="0.5"/><circle cx="873" cy="50" r="1.5" fill="#F5EEE2" opacity="0.8"/><circle cx="1183" cy="331" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="727" cy="518" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="1730" cy="105" r="2.5" fill="#F5EEE2" opacity="0.5"/><circle cx="1437" cy="76" r="1.5" fill="#F5EEE2" opacity="0.8"/><circle cx="1446" cy="327" r="3" fill="#F5EEE2" opacity="0.5"/><circle cx="1477" cy="405" r="2.5" fill="#F5EEE2" opacity="0.35"/><circle cx="955" cy="373" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="249" cy="515" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="1583" cy="304" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="517" cy="417" r="3" fill="#F5EEE2" opacity="0.5"/><circle cx="175" cy="180" r="3" fill="#F5EEE2" opacity="0.5"/><circle cx="1135" cy="294" r="2" fill="#F5EEE2" opacity="0.5"/><circle cx="1779" cy="295" r="3" fill="#F5EEE2" opacity="0.5"/><circle cx="1408" cy="399" r="2" fill="#F5EEE2" opacity="0.35"/><circle cx="179" cy="190" r="2" fill="#F5EEE2" opacity="0.35"/><circle cx="1358" cy="248" r="1.5" fill="#F5EEE2" opacity="0.5"/><circle cx="1712" cy="196" r="2.5" fill="#F5EEE2" opacity="0.5"/><circle cx="18" cy="159" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="766" cy="336" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="1769" cy="537" r="1.5" fill="#F5EEE2" opacity="0.5"/><circle cx="1852" cy="411" r="3" fill="#F5EEE2" opacity="0.5"/><circle cx="817" cy="116" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="830" cy="73" r="2" fill="#F5EEE2" opacity="0.35"/><circle cx="437" cy="461" r="2" fill="#F5EEE2" opacity="0.35"/><circle cx="706" cy="63" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="1170" cy="164" r="1.5" fill="#F5EEE2" opacity="0.5"/><circle cx="1266" cy="36" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="1267" cy="395" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="526" cy="365" r="2.5" fill="#F5EEE2" opacity="0.5"/><circle cx="261" cy="128" r="3" fill="#F5EEE2" opacity="0.5"/><circle cx="993" cy="505" r="2.5" fill="#F5EEE2" opacity="0.35"/><circle cx="305" cy="114" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="552" cy="500" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="57" cy="220" r="2.5" fill="#F5EEE2" opacity="0.35"/><circle cx="1423" cy="37" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="1778" cy="103" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="761" cy="181" r="2.5" fill="#F5EEE2" opacity="0.35"/><circle cx="1100" cy="524" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="466" cy="209" r="2" fill="#F5EEE2" opacity="0.5"/><circle cx="1525" cy="242" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="1019" cy="374" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="1628" cy="296" r="3" fill="#F5EEE2" opacity="0.5"/><circle cx="406" cy="362" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="725" cy="383" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="219" cy="242" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="701" cy="219" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="1853" cy="11" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="714" cy="96" r="1.5" fill="#F5EEE2" opacity="0.5"/><circle cx="1612" cy="214" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="898" cy="350" r="1.5" fill="#F5EEE2" opacity="0.8"/><circle cx="820" cy="484" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="183" cy="172" r="2" fill="#F5EEE2" opacity="0.35"/><circle cx="66" cy="164" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="309" cy="495" r="2.5" fill="#F5EEE2" opacity="0.35"/><circle cx="1133" cy="144" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="1647" cy="115" r="2" fill="#F5EEE2" opacity="0.5"/><circle cx="1795" cy="209" r="2" fill="#F5EEE2" opacity="0.35"/><circle cx="525" cy="227" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="502" cy="343" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="868" cy="144" r="1.5" fill="#F5EEE2" opacity="0.8"/><circle cx="734" cy="479" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="277" cy="554" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="1055" cy="29" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="1256" cy="14" r="2" fill="#F5EEE2" opacity="0.35"/><circle cx="299" cy="494" r="1.5" fill="#F5EEE2" opacity="0.8"/><circle cx="136" cy="343" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="1818" cy="68" r="2" fill="#F5EEE2" opacity="0.35"/><circle cx="577" cy="53" r="1.5" fill="#F5EEE2" opacity="0.8"/><circle cx="936" cy="38" r="1.5" fill="#F5EEE2" opacity="0.5"/><circle cx="676" cy="527" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="577" cy="473" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="517" cy="545" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="1838" cy="217" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="863" cy="134" r="3" fill="#F5EEE2" opacity="0.5"/><circle cx="657" cy="84" r="2" fill="#F5EEE2" opacity="0.5"/><circle cx="159" cy="227" r="2.5" fill="#F5EEE2" opacity="0.35"/><circle cx="1847" cy="168" r="2.5" fill="#F5EEE2" opacity="0.35"/><circle cx="528" cy="150" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="1539" cy="106" r="3" fill="#F5EEE2" opacity="0.5"/><circle cx="343" cy="239" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="893" cy="537" r="3" fill="#F5EEE2" opacity="0.5"/><circle cx="872" cy="210" r="2.5" fill="#F5EEE2" opacity="0.5"/><circle cx="198" cy="384" r="1.5" fill="#F5EEE2" opacity="0.5"/><circle cx="1144" cy="479" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="47" cy="403" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="1287" cy="312" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="1891" cy="244" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="553" cy="288" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="563" cy="142" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="1687" cy="274" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="1108" cy="537" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="679" cy="101" r="2.5" fill="#F5EEE2" opacity="0.35"/><circle cx="1647" cy="197" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="560" cy="27" r="1.5" fill="#F5EEE2" opacity="0.5"/><circle cx="181" cy="237" r="1.5" fill="#F5EEE2" opacity="0.5"/><circle cx="1776" cy="134" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="704" cy="437" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="274" cy="54" r="2" fill="#F5EEE2" opacity="0.35"/><circle cx="340" cy="278" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="423" cy="329" r="2.5" fill="#F5EEE2" opacity="0.8"/><defs><radialGradient id="cvg1420900"><stop offset="0" stop-color="#F2C14E" stop-opacity="0.45"/><stop offset="1" stop-color="#F2C14E" stop-opacity="0"/></radialGradient></defs><circle cx="1420" cy="900" r="620" fill="url(#cvg1420900)"/><circle cx="1420" cy="930" r="190" fill="#F2C14E"/><circle cx="1420" cy="930" r="150" fill="#F8DA8C"/><path d="M0 1080 L0 870 L260 780 L520 890 L820 760 L1120 900 L1300 850 L1500 910 L1700 830 L1920 880 L1920 1080 Z" fill="#0B0F1C"/><path d="M0 1080 L0 960 L400 900 L760 980 L1180 930 L1600 990 L1920 950 L1920 1080 Z" fill="#05080F"/></svg>
+<div class="cover-txt">
+<p class="eyebrow a1">Mensagem · 02.10.2026</p>
+<h1 class="ct1 a2">Despertos<br>para a Presença</h1>
+<p class="cover-sub a3">Baseada no livro “Queimando no Secreto” — Fabiano Ribeiro</p>
+</div>
+<aside>DESPERTOS PARA A PRESENÇA — Mensagem de 02.10.2026.
+Baseada no livro “Queimando no Secreto”, de Fabiano Ribeiro.
+
+Roteiro em 5 partes:
+1. Introdução — Deus está esperando você ACORDAR
+2. O secreto é um lugar de profundidade
+3. O que nos mantém adormecidos (religiosidade, orfandade, distrações/desânimo/cansaço)
+4. Para despertarmos: desejo, consciência da Presença, o secreto todos os dias
+5. Conclusão e apelo</aside>
+</section>
+
+<section id="porta" class="">
+<div class="split">
+<div class="txt">
+<p class="eyebrow a1">Introdução</p>
+<h2 class="t a1">Feche<br>a porta</h2>
+<p class="ref a2">Mateus 6:6</p>
+<p class="punch a3">“…ore a seu Pai, que está em secreto.”</p>
+
+</div>
+<svg class="art" viewBox="0 0 760 760" width="760" height="760" xmlns="http://www.w3.org/2000/svg" aria-label="Porta fechada com luz escapando pelas frestas"><defs><linearGradient id="drbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#121A2B"/><stop offset="1" stop-color="#070B14"/></linearGradient><clipPath id="drc"><rect width="760" height="760" rx="48"/></clipPath></defs><g clip-path="url(#drc)"><rect width="760" height="760" fill="url(#drbg)"/><defs><radialGradient id="drg380400"><stop offset="0" stop-color="#F2C14E" stop-opacity="0.35"/><stop offset="1" stop-color="#F2C14E" stop-opacity="0"/></radialGradient></defs><circle cx="380" cy="400" r="380" fill="url(#drg380400)"/><polygon points="250,640 510,640 700,760 60,760" fill="#F2C14E" opacity="0.28"/><rect x="246" y="160" width="268" height="484" rx="6" fill="#F2C14E"/><rect x="258" y="172" width="244" height="468" fill="#3A2614"/><rect x="282" y="200" width="196" height="180" rx="4" fill="none" stroke="#5A3C20" stroke-width="6"/><rect x="282" y="410" width="196" height="200" rx="4" fill="none" stroke="#5A3C20" stroke-width="6"/><circle cx="470" cy="410" r="10" fill="#F2C14E"/><rect x="0" y="640" width="760" height="4" fill="#2A3346"/></g></svg>
+</div>
+<aside>Leitura: Mateus 6:6
+“Mas quando você orar, vá para seu quarto, feche a porta e ore a seu Pai, que está em secreto. Então seu Pai, que vê em secreto, o recompensará.”</aside>
+</section>
+
+<section id="acordar" class="">
+<div class="split">
+<div class="txt">
+<p class="eyebrow a1">Introdução</p>
+<h2 class="t a1">Deus está esperando você <span class="hl">acordar</span></h2>
+
+<p class="punch a3">Ele não está esperando você chegar.</p>
+
+</div>
+<svg class="art" viewBox="0 0 760 760" width="760" height="760" xmlns="http://www.w3.org/2000/svg" aria-label="Olho se abrindo com um sol na íris"><defs><linearGradient id="eybg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0C1322"/><stop offset="1" stop-color="#162238"/></linearGradient><clipPath id="eyc"><rect width="760" height="760" rx="48"/></clipPath></defs><g clip-path="url(#eyc)"><rect width="760" height="760" fill="url(#eybg)"/><circle cx="253" cy="161" r="2" fill="#F5EEE2" opacity="0.5"/><circle cx="628" cy="131" r="1.5" fill="#F5EEE2" opacity="0.8"/><circle cx="23" cy="242" r="3" fill="#F5EEE2" opacity="0.5"/><circle cx="574" cy="69" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="491" cy="148" r="3" fill="#F5EEE2" opacity="0.5"/><circle cx="664" cy="230" r="2" fill="#F5EEE2" opacity="0.35"/><circle cx="660" cy="48" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="25" cy="181" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="615" cy="20" r="2.5" fill="#F5EEE2" opacity="0.35"/><circle cx="285" cy="131" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="447" cy="111" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="384" cy="34" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="516" cy="65" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="456" cy="209" r="2.5" fill="#F5EEE2" opacity="0.5"/><circle cx="529" cy="223" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="369" cy="146" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="247" cy="241" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="39" cy="229" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="697" cy="188" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="344" cy="256" r="1.5" fill="#F5EEE2" opacity="0.8"/><circle cx="681" cy="64" r="2.5" fill="#F5EEE2" opacity="0.5"/><circle cx="137" cy="26" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="505" cy="32" r="2.5" fill="#F5EEE2" opacity="0.35"/><circle cx="430" cy="239" r="2" fill="#F5EEE2" opacity="0.35"/><circle cx="310" cy="119" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="55" cy="164" r="1.5" fill="#F5EEE2" opacity="0.5"/><circle cx="745" cy="160" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="295" cy="139" r="2" fill="#F5EEE2" opacity="0.35"/><circle cx="327" cy="11" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="624" cy="147" r="1.5" fill="#F5EEE2" opacity="0.35"/><defs><radialGradient id="eyg380400"><stop offset="0" stop-color="#F2C14E" stop-opacity="0.4"/><stop offset="1" stop-color="#F2C14E" stop-opacity="0"/></radialGradient></defs><circle cx="380" cy="400" r="360" fill="url(#eyg380400)"/><line x1="530" y1="400" x2="680" y2="400" stroke="#F2C14E" stroke-width="6" stroke-linecap="round" opacity="0.5"/><line x1="510" y1="475" x2="640" y2="550" stroke="#F2C14E" stroke-width="6" stroke-linecap="round" opacity="0.5"/><line x1="455" y1="530" x2="530" y2="660" stroke="#F2C14E" stroke-width="6" stroke-linecap="round" opacity="0.5"/><line x1="380" y1="550" x2="380" y2="700" stroke="#F2C14E" stroke-width="6" stroke-linecap="round" opacity="0.5"/><line x1="305" y1="530" x2="230" y2="660" stroke="#F2C14E" stroke-width="6" stroke-linecap="round" opacity="0.5"/><line x1="250" y1="475" x2="120" y2="550" stroke="#F2C14E" stroke-width="6" stroke-linecap="round" opacity="0.5"/><line x1="230" y1="400" x2="80" y2="400" stroke="#F2C14E" stroke-width="6" stroke-linecap="round" opacity="0.5"/><line x1="250" y1="325" x2="120" y2="250" stroke="#F2C14E" stroke-width="6" stroke-linecap="round" opacity="0.5"/><line x1="305" y1="270" x2="230" y2="140" stroke="#F2C14E" stroke-width="6" stroke-linecap="round" opacity="0.5"/><line x1="380" y1="250" x2="380" y2="100" stroke="#F2C14E" stroke-width="6" stroke-linecap="round" opacity="0.5"/><line x1="455" y1="270" x2="530" y2="140" stroke="#F2C14E" stroke-width="6" stroke-linecap="round" opacity="0.5"/><line x1="510" y1="325" x2="640" y2="250" stroke="#F2C14E" stroke-width="6" stroke-linecap="round" opacity="0.5"/><path d="M100 400 Q380 160 660 400 Q380 640 100 400 Z" fill="#F5EEE2"/><circle cx="380" cy="400" r="110" fill="#E07A2E"/><circle cx="380" cy="400" r="76" fill="#F2C14E"/><circle cx="380" cy="400" r="34" fill="#F8DA8C"/><path d="M100 400 Q380 160 660 400" fill="none" stroke="#0A1020" stroke-width="14" stroke-linecap="round"/><line x1="190" y1="315" x2="165" y2="270" stroke="#0A1020" stroke-width="10" stroke-linecap="round"/><line x1="280" y1="270" x2="268" y2="220" stroke="#0A1020" stroke-width="10" stroke-linecap="round"/><line x1="380" y1="255" x2="380" y2="200" stroke="#0A1020" stroke-width="10" stroke-linecap="round"/><line x1="480" y1="270" x2="492" y2="220" stroke="#0A1020" stroke-width="10" stroke-linecap="round"/><line x1="570" y1="315" x2="595" y2="270" stroke="#0A1020" stroke-width="10" stroke-linecap="round"/></g></svg>
+</div>
+<aside>Deus não está esperando você chegar. Ele está esperando você ACORDAR!
+
+Por que tantos cristãos vivem perto de Deus, mas longe da Sua Presença? Como alguém pode estar dentro da igreja e continuar dormindo por dentro?</aside>
+</section>
+
+<section id="geracao" class="">
+<div class="split">
+<div class="txt">
+<p class="eyebrow a1">Introdução</p>
+<h2 class="t a1">Uma geração cansada</h2>
+
+<p class="punch a3">Ativos nas agendas · sonolentos no espírito<br>Cheios de compromissos · vazios de encontros</p>
+<p class="tag a4">Deus não está ausente — <b>nós</b> estamos ausentes da Presença.</p>
+</div>
+<svg class="art" viewBox="0 0 760 760" width="760" height="760" xmlns="http://www.w3.org/2000/svg" aria-label="Agenda lotada ao lado de uma lua sonolenta"><defs><linearGradient id="clbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#141D30"/><stop offset="1" stop-color="#0A1020"/></linearGradient><clipPath id="clc"><rect width="760" height="760" rx="48"/></clipPath></defs><g clip-path="url(#clc)"><rect width="760" height="760" fill="url(#clbg)"/><rect x="90" y="150" width="440" height="430" rx="28" fill="#F5EEE2"/><rect x="90" y="150" width="440" height="90" rx="28" fill="#E07A2E"/><rect x="90" y="200" width="440" height="40" fill="#E07A2E"/><rect x="170" y="120" width="18" height="70" rx="9" fill="#0A1020"/><rect x="432" y="120" width="18" height="70" rx="9" fill="#0A1020"/><rect x="118" y="268" width="66" height="58" rx="10" fill="#E07A2E" opacity="0.9"/><rect x="200" y="268" width="66" height="58" rx="10" fill="#3A4560" opacity="0.9"/><rect x="282" y="268" width="66" height="58" rx="10" fill="#3A4560" opacity="0.9"/><rect x="364" y="268" width="66" height="58" rx="10" fill="#E07A2E" opacity="0.9"/><rect x="446" y="268" width="66" height="58" rx="10" fill="#E07A2E" opacity="0.9"/><rect x="118" y="344" width="66" height="58" rx="10" fill="#3A4560" opacity="0.9"/><rect x="200" y="344" width="66" height="58" rx="10" fill="#B85A1A" opacity="0.9"/><rect x="282" y="344" width="66" height="58" rx="10" fill="#E07A2E" opacity="0.9"/><rect x="364" y="344" width="66" height="58" rx="10" fill="#B85A1A" opacity="0.9"/><rect x="446" y="344" width="66" height="58" rx="10" fill="#E07A2E" opacity="0.9"/><rect x="118" y="420" width="66" height="58" rx="10" fill="#3A4560" opacity="0.9"/><rect x="200" y="420" width="66" height="58" rx="10" fill="#3A4560" opacity="0.9"/><rect x="282" y="420" width="66" height="58" rx="10" fill="#B85A1A" opacity="0.9"/><rect x="364" y="420" width="66" height="58" rx="10" fill="#3A4560" opacity="0.9"/><rect x="446" y="420" width="66" height="58" rx="10" fill="#E07A2E" opacity="0.9"/><rect x="118" y="496" width="66" height="58" rx="10" fill="#E07A2E" opacity="0.9"/><rect x="200" y="496" width="66" height="58" rx="10" fill="#E07A2E" opacity="0.9"/><rect x="282" y="496" width="66" height="58" rx="10" fill="#B85A1A" opacity="0.9"/><rect x="364" y="496" width="66" height="58" rx="10" fill="#E07A2E" opacity="0.9"/><rect x="446" y="496" width="66" height="58" rx="10" fill="#B85A1A" opacity="0.9"/><defs><radialGradient id="clg560560"><stop offset="0" stop-color="#AFC3E8" stop-opacity="0.25"/><stop offset="1" stop-color="#AFC3E8" stop-opacity="0"/></radialGradient></defs><circle cx="560" cy="560" r="200" fill="url(#clg560560)"/><circle cx="560" cy="560" r="120" fill="#DCE4F2"/><circle cx="610" cy="520" r="115" fill="#0F1A2E"/><path d="M560 300 h50 l-50 50 h50" fill="none" stroke="#F5EEE2" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/><path d="M624 230 h38 l-38 38 h38" fill="none" stroke="#F5EEE2" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/><path d="M675 171 h28 l-28 28 h28" fill="none" stroke="#F5EEE2" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/></g></svg>
+</div>
+<aside>Vivemos numa geração cansada. Ativos nas agendas e sonolentos no espírito. Cheios de compromissos e vazios de encontros. Sabemos muito sobre Deus, mas conversamos pouco com Ele.
+
+O problema nunca foi a ausência de Deus. Ele está presente. O problema é que nós estamos ausentes da Presença.
+
+“Olhe pra mim!”
+Você não precisa de uma nova experiência para que Deus venha até você. Ele já veio! Ele já habita em você! O que você precisa é DESPERTAR.</aside>
+</section>
+
+<section id="perguntas" class="">
+<div class="split">
+<div class="txt">
+<p class="eyebrow a1">Pensa comigo…</p>
+<h2 class="t a1">Qual foi a última vez…</h2>
+
+<p class="punch a3">…que você perdeu a noção do tempo na Presença?<br><br>…que você orou sem pedir nada, só para estar com Ele?</p>
+
+</div>
+<svg class="art" viewBox="0 0 760 760" width="760" height="760" xmlns="http://www.w3.org/2000/svg" aria-label="Ampulheta com areia dourada caindo"><defs><linearGradient id="hgbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#141D30"/><stop offset="1" stop-color="#0A1020"/></linearGradient><clipPath id="hgc"><rect width="760" height="760" rx="48"/></clipPath></defs><g clip-path="url(#hgc)"><rect width="760" height="760" fill="url(#hgbg)"/><defs><radialGradient id="hgg380400"><stop offset="0" stop-color="#F2C14E" stop-opacity="0.3"/><stop offset="1" stop-color="#F2C14E" stop-opacity="0"/></radialGradient></defs><circle cx="380" cy="400" r="320" fill="url(#hgg380400)"/><rect x="200" y="110" width="360" height="30" rx="15" fill="#8A6A44"/><rect x="200" y="640" width="360" height="30" rx="15" fill="#8A6A44"/><path d="M240 140 L520 140 Q520 300 400 390 Q520 480 520 640 L240 640 Q240 480 360 390 Q240 300 240 140 Z" fill="#DCE4F2" opacity="0.18" stroke="#F5EEE2" stroke-width="6"/><path d="M290 250 L470 250 Q450 320 380 370 Q310 320 290 250 Z" fill="#F2C14E"/><rect x="376" y="370" width="8" height="200" fill="#F2C14E"/><path d="M260 640 Q300 540 380 530 Q460 540 500 640 Z" fill="#F2C14E"/></g></svg>
+</div>
+<aside>Pensa comigo…
+Qual foi a última vez que você perdeu a noção do tempo na Presença de Deus?
+Qual foi a última vez que você orou sem pedir nada, só para estar com Ele?</aside>
+</section>
+
+<section id="testemunho" class="">
+<div class="split">
+<div class="txt">
+<p class="eyebrow a1">O testemunho</p>
+<h2 class="t a1">16 anos · 2h da manhã</h2>
+
+<p class="punch a3">“Deus, eu não sei a terminologia correta. Mas eu sei que preciso do Seu Espírito!”</p>
+
+</div>
+<svg class="art" viewBox="0 0 760 760" width="760" height="760" xmlns="http://www.w3.org/2000/svg" aria-label="Jovem ajoelhado ao lado da cama de madrugada, com a lua na janela"><defs><linearGradient id="rmbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#141B2C"/><stop offset="1" stop-color="#0B101C"/></linearGradient><clipPath id="rmc"><rect width="760" height="760" rx="48"/></clipPath></defs><g clip-path="url(#rmc)"><rect width="760" height="760" fill="url(#rmbg)"/><rect x="440" y="110" width="220" height="250" rx="10" fill="#1F2E52"/><circle cx="480" cy="150" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="520" cy="200" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="600" cy="140" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="630" cy="230" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="500" cy="290" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="590" cy="190" r="34" fill="#DCE4F2"/><circle cx="606" cy="178" r="30" fill="#1F2E52"/><rect x="440" y="230" width="220" height="8" fill="#0B101C"/><rect x="546" y="110" width="8" height="250" fill="#0B101C"/><rect x="436" y="106" width="228" height="258" rx="12" fill="none" stroke="#0B101C" stroke-width="10"/><defs><radialGradient id="rmg250520"><stop offset="0" stop-color="#F2C14E" stop-opacity="0.45"/><stop offset="1" stop-color="#F2C14E" stop-opacity="0"/></radialGradient></defs><circle cx="250" cy="520" r="300" fill="url(#rmg250520)"/><rect x="300" y="470" width="400" height="110" rx="16" fill="#3A4560"/><rect x="300" y="450" width="120" height="44" rx="18" fill="#DCE4F2"/><rect x="680" y="430" width="20" height="200" rx="6" fill="#2A3346"/><rect x="300" y="580" width="16" height="50" fill="#2A3346"/><path d="M470 466 L540 456 L540 474 L470 484 Z" fill="#E07A2E"/><rect x="0" y="630" width="760" height="130" fill="#0A0E18"/><circle cx="241" cy="448" r="28" fill="#05080F"/><path d="M220 478 Q176 538 179 607 L151 630 L300 630 L289 600 L229 591 Q232 550 266 520 L273 492 Q254 474 220 478 Z" fill="#05080F"/><circle cx="150" cy="170" r="54" fill="none" stroke="#C9C2B4" stroke-width="6"/><line x1="150" y1="170" x2="150" y2="136" stroke="#C9C2B4" stroke-width="6" stroke-linecap="round"/><line x1="150" y1="170" x2="176" y2="155" stroke="#C9C2B4" stroke-width="6" stroke-linecap="round"/></g></svg>
+</div>
+<aside>O autor do livro conta que, aos 16 anos, por volta das duas da manhã, num quarto bem pequeno, terminou de ler um livreto sobre o Espírito Santo. Ele se ajoelhou ao lado da cama e orou algo simples:
+
+“Deus, eu não sei a terminologia correta. Mas eu sei que preciso do Seu Espírito!”
+
+Ele sentiu um calor crescendo dentro de si e começou a falar em línguas. Ficou horas assim, até o dia amanhecer. Décadas depois, ele testemunha que nunca perdeu o endereço do lugar secreto.</aside>
+</section>
+
+<section id="avivamento" class="ember" data-transition="fade">
+<div class="stmt">
+<div class="stmt-txt"><h2 class="big a1">Todo avivamento começa com alguém que acordou para Deus!</h2>
+</div>
+<svg class="art" viewBox="0 0 480 480" width="480" height="480" xmlns="http://www.w3.org/2000/svg" aria-label="Chama"><path d="M240 470 C114 470 82 344 156 239 C177 312 208 323 208 323 C188 197 240 124 261 50 C282 155 387 197 366 334 C398 312 398 270 387 250 C440 354 376 470 240 470 Z" fill="#0F1724"/><path d="M240 470 C166 470 146 386 198 312 C208 365 240 365 240 365 C230 281 272 239 282 197 C303 281 356 312 324 407 C324 449 292 470 240 470 Z" fill="#F2C14E"/><path d="M240 470 C208 470 198 428 224 386 C240 407 261 354 266 334 C287 386 292 449 240 470 Z" fill="#F5EEE2"/></svg>
+</div>
+<aside>TODO AVIVAMENTO COMEÇA COM ALGUÉM QUE ACORDOU PARA DEUS!
+
+Hoje, vamos aprender a viver: DESPERTOS PARA A PRESENÇA.</aside>
+</section>
+
+<section id="mapa">
+<p class="eyebrow a1">O caminho de hoje</p>
+<h2 class="t a1">Despertos para a Presença</h2>
+<div class="cards"><div class="card a1"><svg viewBox="0 0 240 240" width="240" height="240" xmlns="http://www.w3.org/2000/svg" aria-label="Ondas do mar"><rect width="240" height="240" rx="40" fill="#1A2436"/><path d="M30 80 q22 -20 45 0 t45 0 t45 0 t45 0" fill="none" stroke="#9FC3D9" stroke-width="12" stroke-linecap="round"/><path d="M30 120 q22 -20 45 0 t45 0 t45 0 t45 0" fill="none" stroke="#3D86AE" stroke-width="12" stroke-linecap="round"/><path d="M30 160 q22 -20 45 0 t45 0 t45 0 t45 0" fill="none" stroke="#1F4E78" stroke-width="12" stroke-linecap="round"/></svg><h3 class="ct">O secreto</h3><p class="cs">é profundidade</p></div><div class="card a2"><svg viewBox="0 0 240 240" width="240" height="240" xmlns="http://www.w3.org/2000/svg" aria-label="Lua sonolenta"><rect width="240" height="240" rx="40" fill="#1A2436"/><circle cx="110" cy="130" r="62" fill="#DCE4F2"/><circle cx="140" cy="108" r="58" fill="#1A2436"/><path d="M150 90 h25 l-25 25 h25" fill="none" stroke="#F2C14E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/><path d="M182 55 h19 l-19 19 h19" fill="none" stroke="#F2C14E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="1"/><path d="M207 26 h14 l-14 14 h14" fill="none" stroke="#F2C14E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="1"/></svg><h3 class="ct">O que nos adormece</h3><p class="cs">3 ladrões</p></div><div class="card a3"><svg viewBox="0 0 240 240" width="240" height="240" xmlns="http://www.w3.org/2000/svg" aria-label="Sol nascendo"><rect width="240" height="240" rx="40" fill="#1A2436"/><circle cx="120" cy="170" r="56" fill="#F2C14E"/><rect x="0" y="170" width="240" height="70" fill="#1A2436"/><rect x="30" y="168" width="180" height="10" rx="5" fill="#E07A2E"/><line x1="120" y1="90" x2="120" y2="60" stroke="#F2C14E" stroke-width="10" stroke-linecap="round"/><line x1="60" y1="120" x2="38" y2="100" stroke="#F2C14E" stroke-width="10" stroke-linecap="round"/><line x1="180" y1="120" x2="202" y2="100" stroke="#F2C14E" stroke-width="10" stroke-linecap="round"/></svg><h3 class="ct">Como despertar</h3><p class="cs">3 passos</p></div></div>
+
+<aside>Visão geral da mensagem:
+1. O secreto é um lugar de profundidade
+2. O que nos mantém adormecidos? (religiosidade, orfandade, distrações/desânimo/cansaço)
+3. Para despertarmos para a Presença (desejo, consciência, secreto todos os dias)</aside>
+</section>
+
+<section id="profundo" class="" data-transition="fade">
+<div class="split">
+<div class="txt">
+<p class="eyebrow a1">I · O secreto</p>
+<h2 class="t a1">Um lugar de profundidade</h2>
+<p class="ref a2">1 Coríntios 2:10</p>
+<p class="punch a3"><b class="g">bathos</b> = as águas profundas do oceano</p>
+<p class="tag a4">Superfície: barulho, agitação · Fundo: quietude, pureza, mistério</p>
+</div>
+<svg class="art" viewBox="0 0 760 760" width="760" height="760" xmlns="http://www.w3.org/2000/svg" aria-label="Mar agitado na superfície e calmo nas profundezas"><defs><linearGradient id="ocw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2E7AA3"/><stop offset="0.35" stop-color="#14466B"/><stop offset="0.75" stop-color="#0A2240"/><stop offset="1" stop-color="#050B18"/></linearGradient><linearGradient id="ocr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F5EEE2" stop-opacity="0.35"/><stop offset="1" stop-color="#F5EEE2" stop-opacity="0"/></linearGradient><clipPath id="occ"><rect width="760" height="760" rx="48"/></clipPath></defs><g clip-path="url(#occ)"><rect width="760" height="760" fill="#9FC3D9"/><rect y="150" width="760" height="610" fill="url(#ocw)"/><polygon points="90,160 150,160 230,640 110,640" fill="url(#ocr)"/><polygon points="270,160 330,160 410,640 290,640" fill="url(#ocr)"/><polygon points="440,160 500,160 580,640 460,640" fill="url(#ocr)"/><polygon points="590,160 650,160 730,640 610,640" fill="url(#ocr)"/><path d="M0 150 Q20 124 40 150 T80 150 Q100 124 120 150 T160 150 Q180 124 200 150 T240 150 Q260 124 280 150 T320 150 Q340 124 360 150 T400 150 Q420 124 440 150 T480 150 Q500 124 520 150 T560 150 Q580 124 600 150 T640 150 Q660 124 680 150 T720 150 Q740 124 760 150 T800 150" fill="none" stroke="#F5EEE2" stroke-width="8" opacity="1"/><path d="M0 180 Q20 162 40 180 T80 180 Q100 162 120 180 T160 180 Q180 162 200 180 T240 180 Q260 162 280 180 T320 180 Q340 162 360 180 T400 180 Q420 162 440 180 T480 180 Q500 162 520 180 T560 180 Q580 162 600 180 T640 180 Q660 162 680 180 T720 180 Q740 162 760 180 T800 180" fill="none" stroke="#F5EEE2" stroke-width="6" opacity="0.7"/><path d="M0 205 Q20 195 40 205 T80 205 Q100 195 120 205 T160 205 Q180 195 200 205 T240 205 Q260 195 280 205 T320 205 Q340 195 360 205 T400 205 Q420 195 440 205 T480 205 Q500 195 520 205 T560 205 Q580 195 600 205 T640 205 Q660 195 680 205 T720 205 Q740 195 760 205 T800 205" fill="none" stroke="#F5EEE2" stroke-width="4" opacity="0.45"/><line x1="40" y1="280" x2="90" y2="280" stroke="#F5EEE2" stroke-width="4" opacity="0.4"/><line x1="40" y1="350" x2="70" y2="350" stroke="#F5EEE2" stroke-width="4" opacity="0.4"/><line x1="40" y1="420" x2="90" y2="420" stroke="#F5EEE2" stroke-width="4" opacity="0.4"/><line x1="40" y1="490" x2="70" y2="490" stroke="#F5EEE2" stroke-width="4" opacity="0.4"/><line x1="40" y1="560" x2="90" y2="560" stroke="#F5EEE2" stroke-width="4" opacity="0.4"/><line x1="40" y1="630" x2="70" y2="630" stroke="#F5EEE2" stroke-width="4" opacity="0.4"/><line x1="40" y1="700" x2="90" y2="700" stroke="#F5EEE2" stroke-width="4" opacity="0.4"/><circle cx="400" cy="600" r="6" fill="none" stroke="#F5EEE2" stroke-width="2" opacity="0.6"/><circle cx="420" cy="560" r="4" fill="none" stroke="#F5EEE2" stroke-width="2" opacity="0.6"/><circle cx="390" cy="520" r="5" fill="none" stroke="#F5EEE2" stroke-width="2" opacity="0.6"/><circle cx="430" cy="470" r="3" fill="none" stroke="#F5EEE2" stroke-width="2" opacity="0.6"/><defs><radialGradient id="ocg380700"><stop offset="0" stop-color="#F2C14E" stop-opacity="0.35"/><stop offset="1" stop-color="#F2C14E" stop-opacity="0"/></radialGradient></defs><circle cx="380" cy="700" r="160" fill="url(#ocg380700)"/></g></svg>
+</div>
+<aside>● O SECRETO É UM LUGAR DE PROFUNDIDADE
+1 Coríntios 2:10 — “Mas Deus o revelou a nós por meio do Espírito. O Espírito sonda todas as coisas, até mesmo as coisas mais profundas de Deus.”
+
+A palavra “profundas”, no original, é bathos: a profundidade do oceano, as águas fundas.
+
+Quando pensamos no mar, sabemos que a superfície é barulhenta, agitada e até suja. Mas o fundo é quieto, sereno, limpo e misterioso.</aside>
+</section>
+
+<section id="rohani" class="">
+<div class="split">
+<div class="txt">
+<p class="eyebrow a1">I · O secreto</p>
+<h2 class="t a1">Rohani</h2>
+
+<p class="punch a3">Pescador Bajau, 80+ anos.<br>Só com o fôlego, desce <b class="g">40 metros</b> e caminha no fundo do mar.</p>
+<p class="tag a4">Descer mais fundo = <b>maturidade</b></p>
+</div>
+<svg class="art" viewBox="0 0 760 760" width="760" height="760" xmlns="http://www.w3.org/2000/svg" aria-label="Pescador caminhando no fundo do mar com um arpão"><defs><linearGradient id="dvw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1D5F86"/><stop offset="0.6" stop-color="#0C2B4A"/><stop offset="1" stop-color="#071628"/></linearGradient><linearGradient id="dvr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F5EEE2" stop-opacity="0.3"/><stop offset="1" stop-color="#F5EEE2" stop-opacity="0"/></linearGradient><clipPath id="dvc"><rect width="760" height="760" rx="48"/></clipPath></defs><g clip-path="url(#dvc)"><rect width="760" height="760" fill="url(#dvw)"/><polygon points="120,0 200,0 300,620 140,620" fill="url(#dvr)"/><polygon points="340,0 420,0 520,620 360,620" fill="url(#dvr)"/><polygon points="520,0 600,0 700,620 540,620" fill="url(#dvr)"/><path d="M0 760 L0 610 Q200 570 380 600 Q560 630 760 590 L760 760 Z" fill="#5E5137"/><path d="M0 760 L0 650 Q240 620 420 650 Q600 670 760 640 L760 760 Z" fill="#41381F"/><path d="M90 640 Q70 595.0 96 550" fill="none" stroke="#2F6B4A" stroke-width="10" stroke-linecap="round"/><path d="M110 640 Q90 575.0 116 510" fill="none" stroke="#2F6B4A" stroke-width="10" stroke-linecap="round"/><path d="M660 640 Q640 585.0 666 530" fill="none" stroke="#2F6B4A" stroke-width="10" stroke-linecap="round"/><path d="M690 640 Q670 605.0 696 570" fill="none" stroke="#2F6B4A" stroke-width="10" stroke-linecap="round"/><circle cx="360" cy="358" r="35" fill="#06101C"/><path d="M314 404 Q360 386 406 404 L414 520 L392 520 L390 615 L365 615 L360 534 L355 615 L330 615 L328 520 L306 520 Z" fill="#06101C"/><line x1="300" y1="460" x2="300" y2="455" stroke="#06101C" stroke-width="0"/><line x1="410" y1="420" x2="560" y2="250" stroke="#06101C" stroke-width="10" stroke-linecap="round"/><path d="M560 250 L548 282 L578 262 Z" fill="#06101C"/><line x1="390" y1="440" x2="420" y2="410" stroke="#06101C" stroke-width="16" stroke-linecap="round"/><circle cx="372" cy="330" r="7" fill="none" stroke="#F5EEE2" stroke-width="2.5" opacity="0.7"/><circle cx="386" cy="290" r="5" fill="none" stroke="#F5EEE2" stroke-width="2.5" opacity="0.7"/><circle cx="368" cy="250" r="6" fill="none" stroke="#F5EEE2" stroke-width="2.5" opacity="0.7"/><circle cx="380" cy="200" r="4" fill="none" stroke="#F5EEE2" stroke-width="2.5" opacity="0.7"/><circle cx="372" cy="150" r="5" fill="none" stroke="#F5EEE2" stroke-width="2.5" opacity="0.7"/><line x1="690" y1="60" x2="690" y2="600" stroke="#F2C14E" stroke-width="4" opacity="0.7"/><line x1="672" y1="60" x2="690" y2="60" stroke="#F2C14E" stroke-width="4" opacity="0.7"/><line x1="672" y1="114" x2="690" y2="114" stroke="#F2C14E" stroke-width="4" opacity="0.7"/><line x1="672" y1="168" x2="690" y2="168" stroke="#F2C14E" stroke-width="4" opacity="0.7"/><line x1="672" y1="222" x2="690" y2="222" stroke="#F2C14E" stroke-width="4" opacity="0.7"/><line x1="672" y1="276" x2="690" y2="276" stroke="#F2C14E" stroke-width="4" opacity="0.7"/><line x1="672" y1="330" x2="690" y2="330" stroke="#F2C14E" stroke-width="4" opacity="0.7"/><line x1="672" y1="384" x2="690" y2="384" stroke="#F2C14E" stroke-width="4" opacity="0.7"/><line x1="672" y1="438" x2="690" y2="438" stroke="#F2C14E" stroke-width="4" opacity="0.7"/><line x1="672" y1="492" x2="690" y2="492" stroke="#F2C14E" stroke-width="4" opacity="0.7"/><line x1="672" y1="546" x2="690" y2="546" stroke="#F2C14E" stroke-width="4" opacity="0.7"/><line x1="672" y1="600" x2="690" y2="600" stroke="#F2C14E" stroke-width="4" opacity="0.7"/><circle cx="690" cy="600" r="12" fill="#F2C14E"/></g></svg>
+</div>
+<aside>Na Indonésia vive Rohani, um pescador do povo Bajau com mais de 80 anos. Sem nenhum equipamento, só com o fôlego, ele desce cerca de 40 metros e caminha no fundo do mar com um arpão na mão. Na cultura dele, descer mais fundo é sinal de maturidade.
+
+Muitos cristãos passam a vida inteira na superfície, sendo açoitados pelas ondas. Estão iludidos com a beleza da superfície, ou já se acomodaram. Mas Deus está chamando você para o fundo!</aside>
+</section>
+
+<section id="superficie" class="ember" data-transition="fade">
+<div class="stmt">
+<div class="stmt-txt"><h2 class="big a1">A superfície te agita, a profundidade te transforma!</h2>
+<p class="stmt-sub a2">1 Coríntios 13:11</p>
+</div>
+<svg class="art" viewBox="0 0 480 480" width="480" height="480" xmlns="http://www.w3.org/2000/svg" aria-label="Chama"><path d="M240 470 C114 470 82 344 156 239 C177 312 208 323 208 323 C188 197 240 124 261 50 C282 155 387 197 366 334 C398 312 398 270 387 250 C440 354 376 470 240 470 Z" fill="#0F1724"/><path d="M240 470 C166 470 146 386 198 312 C208 365 240 365 240 365 C230 281 272 239 282 197 C303 281 356 312 324 407 C324 449 292 470 240 470 Z" fill="#F2C14E"/><path d="M240 470 C208 470 198 428 224 386 C240 407 261 354 266 334 C287 386 292 449 240 470 Z" fill="#F5EEE2"/></svg>
+</div>
+<aside>A SUPERFÍCIE TE AGITA, A PROFUNDIDADE TE TRANSFORMA!
+
+1 Coríntios 13:11 — “Quando eu era menino, falava como menino, pensava como menino e raciocinava como menino. Quando me tornei homem, deixei para trás as coisas de menino.”</aside>
+</section>
+
+<section id="paixao" class="">
+<div class="split">
+<div class="txt">
+<p class="eyebrow a1">I · O secreto</p>
+<h2 class="t a1">O combustível é a paixão</h2>
+
+<p class="punch a3">Disciplina sem Presença → <b class="g">peso</b><br>Disciplina sem paixão → <b class="g">religião</b></p>
+<p class="tag a4">Não é o esforço.</p>
+</div>
+<svg class="art" viewBox="0 0 760 760" width="760" height="760" xmlns="http://www.w3.org/2000/svg" aria-label="Fogueira acesa"><defs><linearGradient id="flbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#141B2C"/><stop offset="1" stop-color="#0A0E18"/></linearGradient><clipPath id="flc"><rect width="760" height="760" rx="48"/></clipPath></defs><g clip-path="url(#flc)"><rect width="760" height="760" fill="url(#flbg)"/><defs><radialGradient id="flg380440"><stop offset="0" stop-color="#E07A2E" stop-opacity="0.45"/><stop offset="1" stop-color="#E07A2E" stop-opacity="0"/></radialGradient></defs><circle cx="380" cy="440" r="360" fill="url(#flg380440)"/><path d="M380 600 C242 600 208 462 288 347 C311 428 346 439 346 439 C322 301 380 221 403 140 C426 255 541 301 518 450 C552 428 552 382 541 358 C598 474 530 600 380 600 Z" fill="#E07A2E"/><path d="M380 600 C300 600 276 508 334 428 C346 485 380 485 380 485 C368 393 414 347 426 301 C449 393 506 428 472 531 C472 577 438 600 380 600 Z" fill="#F2C14E"/><path d="M380 600 C346 600 334 554 363 508 C380 531 403 474 409 450 C432 508 438 577 380 600 Z" fill="#F5EEE2"/><rect x="200" y="590" width="360" height="44" rx="22" fill="#5A3C20" transform="rotate(-8 380 612)"/><rect x="200" y="590" width="360" height="44" rx="22" fill="#6E4A28" transform="rotate(8 380 612)"/></g></svg>
+</div>
+<aside>Mas atenção: disciplina sem Presença vira peso. Disciplina sem paixão vira religião.
+
+O COMBUSTÍVEL DO SECRETO NÃO É O ESFORÇO, É A PAIXÃO!</aside>
+</section>
+
+<section id="adormece">
+<p class="eyebrow a1">II · O que nos mantém adormecidos?</p>
+<h2 class="t a1">Ladrões da sensibilidade</h2>
+<div class="cards"><div class="card a1"><svg viewBox="0 0 240 240" width="240" height="240" xmlns="http://www.w3.org/2000/svg" aria-label="Máscara"><rect width="240" height="240" rx="40" fill="#1A2436"/><path d="M120 50 C175 50 190 95 186 130 C180 180 150 205 120 208 C90 205 60 180 54 130 C50 95 65 50 120 50 Z" fill="#F5EEE2"/><path d="M78 118 Q96 100 114 118 Q96 132 78 118 Z" fill="#1A2436"/><path d="M126 118 Q144 100 162 118 Q144 132 126 118 Z" fill="#1A2436"/><path d="M100 170 L140 170" stroke="#8A7F70" stroke-width="6" stroke-linecap="round"/></svg><h3 class="ct">Religiosidade</h3><p class="cs">Mateus 15:8</p></div><div class="card a2"><svg viewBox="0 0 240 240" width="240" height="240" xmlns="http://www.w3.org/2000/svg" aria-label="Pai e filho"><rect width="240" height="240" rx="40" fill="#1A2436"/><circle cx="95" cy="62" r="20" fill="#F5EEE2"/><path d="M70 88 Q95 78 120 88 L125 152 L113 152 L112 205 L98 205 L95 160 L92 205 L78 205 L77 152 L65 152 Z" fill="#F5EEE2"/><circle cx="160" cy="120" r="12" fill="#F5EEE2"/><path d="M145 135 Q160 128 175 135 L178 174 L171 174 L170 205 L162 205 L160 178 L158 205 L150 205 L149 174 L142 174 Z" fill="#F5EEE2"/><path d="M110 130 Q135 145 152 150" fill="none" stroke="#F5EEE2" stroke-width="9" stroke-linecap="round"/></svg><h3 class="ct">Orfandade</h3><p class="cs">Romanos 8:15</p></div><div class="card a3"><svg viewBox="0 0 240 240" width="240" height="240" xmlns="http://www.w3.org/2000/svg" aria-label="Celular e sono"><rect width="240" height="240" rx="40" fill="#1A2436"/><rect x="62" y="40" width="96" height="160" rx="18" fill="#3A4560"/><rect x="72" y="58" width="76" height="118" rx="6" fill="#9FC3D9"/><path d="M150 110 h25 l-25 25 h25" fill="none" stroke="#F2C14E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/><path d="M182 75 h19 l-19 19 h19" fill="none" stroke="#F2C14E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="1"/><path d="M207 46 h14 l-14 14 h14" fill="none" stroke="#F2C14E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="1"/></svg><h3 class="ct">Distrações, desânimo, cansaço</h3><p class="cs">Mateus 26:41</p></div></div>
+
+<aside>● O QUE NOS MANTÉM ADORMECIDOS?
+Existem forças que roubam nossa sensibilidade à Presença:
+a) A religiosidade
+b) A orfandade
+c) As distrações, o desânimo e o cansaço</aside>
+</section>
+
+<section id="religiosidade" class="">
+<div class="split">
+<div class="txt">
+<p class="eyebrow a1">II · a) Religiosidade</p>
+<h2 class="t a1">Ritual sem relacionamento</h2>
+<p class="ref a2">Mateus 15:8</p>
+<p class="punch a3">Cantar sem adorar.<br>Ler sem ouvir.<br>Orar sem encontrar.</p>
+<p class="tag a4">= um culto sem Deus</p>
+</div>
+<svg class="art" viewBox="0 0 760 760" width="760" height="760" xmlns="http://www.w3.org/2000/svg" aria-label="Máscara inexpressiva diante de uma cortina de teatro"><defs><linearGradient id="mkbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1B1420"/><stop offset="1" stop-color="#0C0A12"/></linearGradient><clipPath id="mkc"><rect width="760" height="760" rx="48"/></clipPath></defs><g clip-path="url(#mkc)"><rect width="760" height="760" fill="url(#mkbg)"/><path d="M-20 0 Q30 380 -20 760 L80 760 Q30 380 80 0 Z" fill="#3B1D24" opacity="0.5"/><path d="M80 0 Q130 380 80 760 L180 760 Q130 380 180 0 Z" fill="#3B1D24" opacity="0.8"/><path d="M180 0 Q230 380 180 760 L280 760 Q230 380 280 0 Z" fill="#3B1D24" opacity="0.5"/><path d="M280 0 Q330 380 280 760 L380 760 Q330 380 380 0 Z" fill="#3B1D24" opacity="0.8"/><path d="M380 0 Q430 380 380 760 L480 760 Q430 380 480 0 Z" fill="#3B1D24" opacity="0.5"/><path d="M480 0 Q530 380 480 760 L580 760 Q530 380 580 0 Z" fill="#3B1D24" opacity="0.8"/><path d="M580 0 Q630 380 580 760 L680 760 Q630 380 680 0 Z" fill="#3B1D24" opacity="0.5"/><path d="M680 0 Q730 380 680 760 L780 760 Q730 380 780 0 Z" fill="#3B1D24" opacity="0.8"/><defs><radialGradient id="mkg380380"><stop offset="0" stop-color="#F5EEE2" stop-opacity="0.18"/><stop offset="1" stop-color="#F5EEE2" stop-opacity="0"/></radialGradient></defs><circle cx="380" cy="380" r="300" fill="url(#mkg380380)"/><path d="M380 150 C520 150 560 260 550 360 C540 500 460 600 380 610 C300 600 220 500 210 360 C200 260 240 150 380 150 Z" fill="#F5EEE2"/><path d="M260 340 Q305 300 350 340 Q305 372 260 340 Z" fill="#0C0A12"/><path d="M410 340 Q455 300 500 340 Q455 372 410 340 Z" fill="#0C0A12"/><path d="M330 500 L430 500" stroke="#8A7F70" stroke-width="8" stroke-linecap="round"/><path d="M380 380 L370 450 L392 450" fill="none" stroke="#C9BFAE" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="M212 330 Q120 300 60 360" fill="none" stroke="#E07A2E" stroke-width="6"/><path d="M548 330 Q640 300 700 360" fill="none" stroke="#E07A2E" stroke-width="6"/><path d="M520 230 L470 300 L500 310 L455 380" fill="none" stroke="#8A7F70" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
+</div>
+<aside>a) A RELIGIOSIDADE
+Mateus 15:8 — “Esse povo me honra com os lábios, mas o seu coração está longe de mim.”
+
+Religiosidade é fé como ritual. É fazer tudo certo e não sentir mais nada. É cantar sem adorar, ler sem ouvir, orar sem encontrar.
+
+O RITUAL SEM RELACIONAMENTO É UM CULTO SEM DEUS!</aside>
+</section>
+
+<section id="orfandade" class="">
+<div class="split">
+<div class="txt">
+<p class="eyebrow a1">II · b) Orfandade</p>
+<h2 class="t a1">“Aba, Pai”</h2>
+<p class="ref a2">Romanos 8:15</p>
+<p class="punch a3">O órfão trabalha <i>para</i> Deus,<br>mas não descansa <i>em</i> Deus.</p>
+<p class="tag a4">Intimidade é coisa de Pai e filho.</p>
+</div>
+<svg class="art" viewBox="0 0 760 760" width="760" height="760" xmlns="http://www.w3.org/2000/svg" aria-label="Um pai de mãos dadas com o filho, sob um coração"><defs><linearGradient id="fcbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1E2438"/><stop offset="1" stop-color="#2F2230"/></linearGradient><clipPath id="fcc"><rect width="760" height="760" rx="48"/></clipPath></defs><g clip-path="url(#fcc)"><rect width="760" height="760" fill="url(#fcbg)"/><defs><radialGradient id="fcg400260"><stop offset="0" stop-color="#F2C14E" stop-opacity="0.45"/><stop offset="1" stop-color="#F2C14E" stop-opacity="0"/></radialGradient></defs><circle cx="400" cy="260" r="260" fill="url(#fcg400260)"/><path d="M400 330 C330 270 300 200 350 170 C380 150 400 180 400 200 C400 180 420 150 450 170 C500 200 470 270 400 330 Z" fill="#E07A2E"/><rect x="0" y="640" width="760" height="120" fill="#141826"/><circle cx="300" cy="279" r="49" fill="#0B0E18"/><path d="M235 344 Q300 317 365 344 L376 507 L346 507 L342 640 L308 640 L300 526 L292 640 L258 640 L254 507 L224 507 Z" fill="#0B0E18"/><circle cx="500" cy="440" r="27" fill="#0B0E18"/><path d="M464 476 Q500 462 536 476 L542 566 L525 566 L523 640 L504 640 L500 577 L496 640 L477 640 L475 566 L458 566 Z" fill="#0B0E18"/><path d="M340 420 Q420 470 482 500" fill="none" stroke="#0B0E18" stroke-width="22" stroke-linecap="round"/></g></svg>
+</div>
+<aside>b) A ORFANDADE
+Romanos 8:15 — “Pois vocês não receberam um espírito que os escravize para novamente temerem, mas receberam o Espírito que os adota como filhos, por meio do qual clamamos: ‘Aba, Pai’.”
+
+O órfão até trabalha para Deus, mas não descansa em Deus. Ele tem medo de se aproximar, porque não sabe que é amado.
+
+Ser íntimo é coisa de Pai e filho!</aside>
+</section>
+
+<section id="getsemani" class="">
+<div class="split">
+<div class="txt">
+<p class="eyebrow a1">II · c) Distrações, desânimo, cansaço</p>
+<h2 class="t a1">Dormindo no Getsêmani</h2>
+<p class="ref a2">Mateus 26:41</p>
+<p class="punch a3">Deus fazendo algo grande… e nós cansados demais para perceber.</p>
+
+</div>
+<svg class="art" viewBox="0 0 760 760" width="760" height="760" xmlns="http://www.w3.org/2000/svg" aria-label="Getsêmani: discípulos dormindo enquanto um homem ora ao luar"><defs><linearGradient id="gtbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0B1020"/><stop offset="1" stop-color="#18213A"/></linearGradient><clipPath id="gtc"><rect width="760" height="760" rx="48"/></clipPath></defs><g clip-path="url(#gtc)"><rect width="760" height="760" fill="url(#gtbg)"/><circle cx="178" cy="224" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="298" cy="255" r="2" fill="#F5EEE2" opacity="0.5"/><circle cx="534" cy="103" r="2" fill="#F5EEE2" opacity="0.35"/><circle cx="24" cy="199" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="158" cy="128" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="53" cy="233" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="462" cy="27" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="519" cy="69" r="2.5" fill="#F5EEE2" opacity="0.35"/><circle cx="168" cy="55" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="474" cy="92" r="2.5" fill="#F5EEE2" opacity="0.5"/><circle cx="506" cy="87" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="48" cy="250" r="2" fill="#F5EEE2" opacity="0.35"/><circle cx="212" cy="116" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="583" cy="253" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="359" cy="84" r="3" fill="#F5EEE2" opacity="0.5"/><circle cx="383" cy="241" r="3" fill="#F5EEE2" opacity="0.5"/><circle cx="506" cy="207" r="2.5" fill="#F5EEE2" opacity="0.35"/><circle cx="105" cy="91" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="513" cy="45" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="633" cy="173" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="695" cy="97" r="2.5" fill="#F5EEE2" opacity="0.5"/><circle cx="364" cy="315" r="2.5" fill="#F5EEE2" opacity="0.35"/><circle cx="115" cy="96" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="449" cy="201" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="47" cy="276" r="2" fill="#F5EEE2" opacity="0.5"/><circle cx="177" cy="312" r="1.5" fill="#F5EEE2" opacity="0.5"/><circle cx="512" cy="269" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="263" cy="135" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="80" cy="234" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="504" cy="39" r="2.5" fill="#F5EEE2" opacity="0.35"/><circle cx="274" cy="158" r="1.5" fill="#F5EEE2" opacity="0.5"/><circle cx="264" cy="97" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="356" cy="84" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="500" cy="35" r="2.5" fill="#F5EEE2" opacity="0.35"/><circle cx="675" cy="279" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="227" cy="197" r="2" fill="#F5EEE2" opacity="0.5"/><circle cx="625" cy="228" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="498" cy="167" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="612" cy="151" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="20" cy="205" r="2" fill="#F5EEE2" opacity="0.8"/><defs><radialGradient id="gtg560170"><stop offset="0" stop-color="#DCE4F2" stop-opacity="0.35"/><stop offset="1" stop-color="#DCE4F2" stop-opacity="0"/></radialGradient></defs><circle cx="560" cy="170" r="180" fill="url(#gtg560170)"/><circle cx="560" cy="170" r="72" fill="#E8EDF5"/><path d="M0 760 L0 560 Q200 500 400 540 Q600 580 760 520 L760 760 Z" fill="#0A0E18"/><path d="M150 560 C140 480 190 440 160 360 C200 400 210 450 200 560 Z" fill="#06080F"/><ellipse cx="120" cy="330" rx="90" ry="60" fill="#121A2A"/><ellipse cx="210" cy="290" rx="100" ry="70" fill="#121A2A"/><ellipse cx="280" cy="340" rx="80" ry="55" fill="#121A2A"/><ellipse cx="170" cy="380" rx="90" ry="50" fill="#121A2A"/><ellipse cx="150" cy="640" rx="70" ry="20" fill="#06080F"/><circle cx="90" cy="630" r="18" fill="#06080F"/><ellipse cx="300" cy="658" rx="70" ry="20" fill="#06080F"/><circle cx="240" cy="648" r="18" fill="#06080F"/><ellipse cx="440" cy="640" rx="70" ry="20" fill="#06080F"/><circle cx="380" cy="630" r="18" fill="#06080F"/><path d="M150 590 h32 l-32 32 h32" fill="none" stroke="#C9C2B4" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/><path d="M191 545 h24 l-24 24 h24" fill="none" stroke="#C9C2B4" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/><path d="M224 507 h18 l-18 18 h18" fill="none" stroke="#C9C2B4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.7"/><path d="M420 600 h29 l-29 29 h29" fill="none" stroke="#C9C2B4" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><path d="M457 560 h22 l-22 22 h22" fill="none" stroke="#C9C2B4" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><path d="M486 526 h16 l-16 16 h16" fill="none" stroke="#C9C2B4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/><defs><radialGradient id="gtg610540"><stop offset="0" stop-color="#F2C14E" stop-opacity="0.5"/><stop offset="1" stop-color="#F2C14E" stop-opacity="0"/></radialGradient></defs><circle cx="610" cy="540" r="140" fill="url(#gtg610540)"/><circle cx="604" cy="474" r="19" fill="#06080F"/><path d="M590 494 Q560 536 561 584 L542 600 L646 600 L638 579 L596 573 Q598 544 622 523 L627 504 Q614 491 590 494 Z" fill="#06080F"/></g></svg>
+</div>
+<aside>c) AS DISTRAÇÕES, O DESÂNIMO E O CANSAÇO
+Mateus 26:41 — “Vigiem e orem para que não caiam em tentação. O espírito está pronto, mas a carne é fraca.”
+
+No Getsêmani, Jesus estava vivendo o momento mais importante da história, e os discípulos estavam dormindo.
+
+Quantas vezes Deus está fazendo algo grande, e nós estamos cansados demais para perceber?</aside>
+</section>
+
+<section id="visitacao" class="ember" data-transition="fade">
+<div class="stmt">
+<div class="stmt-txt"><h2 class="big a1">Quem dorme na hora da visitação, acorda na hora do arrependimento!</h2>
+</div>
+<svg class="art" viewBox="0 0 480 480" width="480" height="480" xmlns="http://www.w3.org/2000/svg" aria-label="Chama"><path d="M240 470 C114 470 82 344 156 239 C177 312 208 323 208 323 C188 197 240 124 261 50 C282 155 387 197 366 334 C398 312 398 270 387 250 C440 354 376 470 240 470 Z" fill="#0F1724"/><path d="M240 470 C166 470 146 386 198 312 C208 365 240 365 240 365 C230 281 272 239 282 197 C303 281 356 312 324 407 C324 449 292 470 240 470 Z" fill="#F2C14E"/><path d="M240 470 C208 470 198 428 224 386 C240 407 261 354 266 334 C287 386 292 449 240 470 Z" fill="#F5EEE2"/></svg>
+</div>
+<aside>QUEM DORME NA HORA DA VISITAÇÃO, ACORDA NA HORA DO ARREPENDIMENTO!</aside>
+</section>
+
+<section id="despertar">
+<p class="eyebrow a1">III · Para despertarmos para a Presença…</p>
+<h2 class="t a1">Três despertares</h2>
+<div class="cards"><div class="card a1"><svg viewBox="0 0 240 240" width="240" height="240" xmlns="http://www.w3.org/2000/svg" aria-label="Gota d’água"><rect width="240" height="240" rx="40" fill="#1A2436"/><path d="M120 40 C150 90 180 120 180 155 C180 190 152 210 120 210 C88 210 60 190 60 155 C60 120 90 90 120 40 Z" fill="#3D86AE"/><path d="M92 160 Q95 185 120 190" fill="none" stroke="#DCEFF7" stroke-width="9" stroke-linecap="round"/></svg><h3 class="ct">1. O desejo</h3><p class="cs">Salmo 42</p></div><div class="card a2"><svg viewBox="0 0 240 240" width="240" height="240" xmlns="http://www.w3.org/2000/svg" aria-label="Luz acesa"><rect width="240" height="240" rx="40" fill="#1A2436"/><defs><radialGradient id="ilg120120"><stop offset="0" stop-color="#F2C14E" stop-opacity="0.6"/><stop offset="1" stop-color="#F2C14E" stop-opacity="0"/></radialGradient></defs><circle cx="120" cy="120" r="100" fill="url(#ilg120120)"/><circle cx="120" cy="110" r="46" fill="#F2C14E"/><rect x="100" y="150" width="40" height="40" rx="8" fill="#C9C2B4"/></svg><h3 class="ct">2. A consciência</h3><p class="cs">2 Coríntios 4:7</p></div><div class="card a3"><svg viewBox="0 0 240 240" width="240" height="240" xmlns="http://www.w3.org/2000/svg" aria-label="Todos os dias"><rect width="240" height="240" rx="40" fill="#1A2436"/><rect x="40" y="60" width="160" height="140" rx="18" fill="#F5EEE2"/><rect x="40" y="60" width="160" height="38" rx="18" fill="#E07A2E"/><rect x="40" y="80" width="160" height="18" fill="#E07A2E"/><circle cx="120" cy="150" r="30" fill="#F2C14E"/></svg><h3 class="ct">3. Todos os dias</h3><p class="cs">Marcos 1:35</p></div></div>
+
+<aside>● PARA DESPERTARMOS PARA A PRESENÇA…
+1. Desperte o desejo
+2. Desperte a consciência da Presença
+3. Desperte para o secreto todos os dias</aside>
+</section>
+
+<section id="desejo" class="" data-transition="fade">
+<div class="split">
+<div class="txt">
+<p class="eyebrow a1">III · 1. Desperte o desejo</p>
+<h2 class="t a1">Fome e sede</h2>
+<p class="ref a2">Salmo 42:1-2</p>
+<p class="punch a3">Para a corça, água não é luxo:<br>é <b class="g">sobrevivência</b>.</p>
+<p class="tag a4">Os famintos avançam: Abraão · Davi · Eliseu · Pedro</p>
+</div>
+<svg class="art" viewBox="0 0 760 760" width="760" height="760" xmlns="http://www.w3.org/2000/svg" aria-label="Corça bebendo água num riacho em terra árida"><defs><linearGradient id="debg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8A35A"/><stop offset="1" stop-color="#7A3E2A"/></linearGradient><clipPath id="dec"><rect width="760" height="760" rx="48"/></clipPath></defs><g clip-path="url(#dec)"><rect width="760" height="760" fill="url(#debg)"/><circle cx="170" cy="220" r="70" fill="#F8DA8C"/><path d="M0 760 L0 520 Q200 470 380 510 Q560 550 760 500 L760 760 Z" fill="#B0703A"/><path d="M0 760 L0 610 Q220 580 420 620 Q600 650 760 610 L760 760 Z" fill="#8C5530"/><ellipse cx="560" cy="650" rx="190" ry="36" fill="#3D86AE"/><ellipse cx="560" cy="646" rx="150" ry="24" fill="#6FB3D2"/><ellipse cx="545" cy="640" rx="40" ry="8" fill="none" stroke="#F5EEE2" stroke-width="3" opacity="0.8"/><ellipse cx="330" cy="470" rx="130" ry="58" fill="#2A1A14"/><rect x="228" y="490" width="18" height="140" rx="8" fill="#2A1A14"/><rect x="262" y="490" width="18" height="140" rx="8" fill="#2A1A14"/><rect x="392" y="490" width="18" height="140" rx="8" fill="#2A1A14"/><rect x="424" y="490" width="18" height="140" rx="8" fill="#2A1A14"/><polygon points="410,430 452,440 545,600 512,618" fill="#2A1A14"/><ellipse cx="540" cy="620" rx="40" ry="20" fill="#2A1A14" transform="rotate(50 540 620)"/><ellipse cx="500" cy="590" rx="22" ry="9" fill="#2A1A14" transform="rotate(-30 500 590)"/><path d="M515 585 L470 520 M492 552 L455 545 M480 535 L490 490 M520 590 L500 515 M508 548 L530 515" fill="none" stroke="#2A1A14" stroke-width="8" stroke-linecap="round"/><ellipse cx="205" cy="448" rx="18" ry="10" fill="#2A1A14"/></g></svg>
+</div>
+<aside>1. DESPERTE O DESEJO
+Salmo 42:1-2 — “Como a corça anseia por águas correntes, a minha alma anseia por ti, ó Deus. A minha alma tem sede de Deus, do Deus vivo.”
+
+Em terras áridas, a corça percorre jornadas enormes até encontrar água. Para ela, a água não é um luxo, é questão de sobrevivência.
+
+TUDO NA VIDA CRISTÃ TEM A VER COM FOME E SEDE!
+
+Os famintos avançam, não há outro jeito! Foi assim com Abraão, com Davi, com Eliseu e com Pedro.</aside>
+</section>
+
+<section id="jaco" class="light">
+<p class="eyebrow a1">III · 1. Desperte o desejo</p>
+<h2 class="t a1">Jacó</h2>
+<div class="pills a2"><p class="pill">Primogenitura</p><p class="pill">Raquel</p><p class="pill">Riquezas</p><p class="pill">Voltar para casa</p></div>
+<div class="downs a3"><x-shape kind="arrow-down" class="dn"></x-shape><x-shape kind="arrow-down" class="dn"></x-shape><x-shape kind="arrow-down" class="dn"></x-shape><x-shape kind="arrow-down" class="dn"></x-shape></div>
+<p class="bigpill a3">O desejo por Deus</p>
+<p class="jtag a4">Um desejo maior sempre supera um desejo menor.</p>
+<aside>Olhe para Jacó. Ele teve muitos desejos: a primogenitura, o casamento com Raquel, as riquezas, a volta para casa. Mas todos esses desejos foram submetidos a um desejo maior: o desejo por Deus. E esse desejo mudou seu nome e sua história.
+
+UM DESEJO MAIOR SEMPRE SUPERA UM DESEJO MENOR!
+
+Pergunta: O que você mais deseja hoje? Seu maior desejo revela o seu verdadeiro deus.</aside>
+</section>
+
+<section id="lake" class="light">
+<div class="split">
+<div class="txt">
+<p class="eyebrow a1">III · 1. Desperte o desejo</p>
+<h2 class="t a1">John G. Lake</h2>
+
+<p class="punch a3">Hospitais de Spokane vazios…<br>mas a fome por Deus era maior que a fome por milagres.</p>
+<p class="tag a4">“…ainda sinto que preciso de mais!”</p>
+</div>
+<svg class="art" viewBox="0 0 760 760" width="760" height="760" xmlns="http://www.w3.org/2000/svg" aria-label="Enfermaria com leitos vazios iluminados pela janela"><defs><linearGradient id="hsbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9E1D2"/><stop offset="1" stop-color="#D6CAB4"/></linearGradient><clipPath id="hsc"><rect width="760" height="760" rx="48"/></clipPath></defs><g clip-path="url(#hsc)"><rect width="760" height="760" fill="url(#hsbg)"/><rect x="420" y="110" width="220" height="250" rx="10" fill="#F8DA8C"/><defs><radialGradient id="hsg530240"><stop offset="0" stop-color="#F2C14E" stop-opacity="0.55"/><stop offset="1" stop-color="#F2C14E" stop-opacity="0"/></radialGradient></defs><circle cx="530" cy="240" r="220" fill="url(#hsg530240)"/><rect x="525" y="110" width="10" height="250" fill="#C9B898"/><rect x="420" y="230" width="220" height="10" fill="#C9B898"/><polygon points="420,360 640,360 760,640 300,640" fill="#F2C14E" opacity="0.25"/><rect x="90" y="120" width="120" height="120" rx="20" fill="#E07A2E" opacity="0.85"/><rect x="138" y="140" width="24" height="80" fill="#F5EEE2"/><rect x="110" y="168" width="80" height="24" fill="#F5EEE2"/><rect x="60" y="470" width="180" height="60" rx="10" fill="#FBF7F0" stroke="#8A7F70" stroke-width="5"/><rect x="68" y="452" width="50" height="26" rx="10" fill="#FBF7F0" stroke="#8A7F70" stroke-width="5"/><line x1="70" y1="530" x2="70" y2="590" stroke="#8A7F70" stroke-width="6"/><line x1="230" y1="530" x2="230" y2="590" stroke="#8A7F70" stroke-width="6"/><rect x="300" y="470" width="180" height="60" rx="10" fill="#FBF7F0" stroke="#8A7F70" stroke-width="5"/><rect x="308" y="452" width="50" height="26" rx="10" fill="#FBF7F0" stroke="#8A7F70" stroke-width="5"/><line x1="310" y1="530" x2="310" y2="590" stroke="#8A7F70" stroke-width="6"/><line x1="470" y1="530" x2="470" y2="590" stroke="#8A7F70" stroke-width="6"/><rect x="540" y="470" width="180" height="60" rx="10" fill="#FBF7F0" stroke="#8A7F70" stroke-width="5"/><rect x="548" y="452" width="50" height="26" rx="10" fill="#FBF7F0" stroke="#8A7F70" stroke-width="5"/><line x1="550" y1="530" x2="550" y2="590" stroke="#8A7F70" stroke-width="6"/><line x1="710" y1="530" x2="710" y2="590" stroke="#8A7F70" stroke-width="6"/><rect x="0" y="590" width="760" height="170" fill="#C9BCA4"/></g></svg>
+</div>
+<aside>John G. Lake viu os hospitais de Spokane, nos Estados Unidos, ficarem esvaziados por causa das salas de cura do seu ministério. Ainda assim, sua fome por Deus era maior que sua fome por milagres. Seus discípulos o ouviam orar:
+
+“Pai, eu sei que sou um dos homens mais famintos por Ti na Terra, mas ainda sinto que preciso de mais!”</aside>
+</section>
+
+<section id="caminho">
+<p class="eyebrow a1">III · 1. Desperte o desejo</p>
+<h2 class="t a1">O caminho</h2>
+<div class="cards"><div class="card a1"><svg viewBox="0 0 240 240" width="240" height="240" xmlns="http://www.w3.org/2000/svg" aria-label="Gota d’água"><rect width="240" height="240" rx="40" fill="#1A2436"/><path d="M120 40 C150 90 180 120 180 155 C180 190 152 210 120 210 C88 210 60 190 60 155 C60 120 90 90 120 40 Z" fill="#3D86AE"/><path d="M92 160 Q95 185 120 190" fill="none" stroke="#DCEFF7" stroke-width="9" stroke-linecap="round"/></svg><h3 class="ct">Desejo</h3></div><div class="card a2"><svg viewBox="0 0 240 240" width="240" height="240" xmlns="http://www.w3.org/2000/svg" aria-label="Disciplina"><rect width="240" height="240" rx="40" fill="#1A2436"/><path d="M40 200 L40 160 L90 160 L90 120 L140 120 L140 80 L200 80 L200 200 Z" fill="#C9C2B4"/></svg><h3 class="ct">Disciplina</h3></div><div class="card a3"><svg viewBox="0 0 240 240" width="240" height="240" xmlns="http://www.w3.org/2000/svg" aria-label="Deleite"><rect width="240" height="240" rx="40" fill="#1A2436"/><path d="M120 200 C40 140 30 90 60 66 C88 44 115 62 120 84 C125 62 152 44 180 66 C210 90 200 140 120 200 Z" fill="#E07A2E"/></svg><h3 class="ct">Deleite</h3><p class="cs">Salmo 37:4</p></div></div>
+<div class="declare a4"><p class="dl">DECLARE COMIGO</p><p class="dq">Senhor, custe o que custar, eu quero mais de Ti!</p></div>
+<aside>A vida cristã não começa no esforço. Ela começa no desejo e segue um caminho:
+DESEJO → DISCIPLINA → DELEITE
+
+Salmo 37:4 — “Deleite-se no Senhor, e ele atenderá aos desejos do seu coração.”
+
+Quando eu me deleito Nele, minhas intenções são purificadas e os desejos de Deus passam a ser os meus.
+
+Declare comigo: “Senhor, custe o que custar, eu quero mais de Ti!”</aside>
+</section>
+
+<section id="vaso" class="" data-transition="fade">
+<div class="split">
+<div class="txt">
+<p class="eyebrow a1">III · 2. Desperte a consciência</p>
+<h2 class="t a1">Tesouro em vasos de barro</h2>
+<p class="ref a2">2 Coríntios 4:7</p>
+<p class="punch a3">Antiga Aliança: Presença <b class="g">fora</b> — arca, tabernáculo, templo<br>Nova Aliança: Presença <b class="g">dentro</b> de você</p>
+<p class="tag a4">A questão não é <i>se</i> Deus está aqui — é o quanto você tem consciência disso.</p>
+</div>
+<svg class="art" viewBox="0 0 760 760" width="760" height="760" xmlns="http://www.w3.org/2000/svg" aria-label="Vaso de barro com luz saindo pelas rachaduras"><defs><linearGradient id="jrbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#141B2C"/><stop offset="1" stop-color="#0A0E18"/></linearGradient><clipPath id="jrc"><rect width="760" height="760" rx="48"/></clipPath></defs><g clip-path="url(#jrc)"><rect width="760" height="760" fill="url(#jrbg)"/><defs><radialGradient id="jrg380420"><stop offset="0" stop-color="#F2C14E" stop-opacity="0.5"/><stop offset="1" stop-color="#F2C14E" stop-opacity="0"/></radialGradient></defs><circle cx="380" cy="420" r="360" fill="url(#jrg380420)"/><line x1="590" y1="430" x2="720" y2="430" stroke="#F2C14E" stroke-width="5" stroke-linecap="round" opacity="0.45"/><line x1="574" y1="510" x2="694" y2="560" stroke="#F2C14E" stroke-width="5" stroke-linecap="round" opacity="0.45"/><line x1="528" y1="578" x2="620" y2="670" stroke="#F2C14E" stroke-width="5" stroke-linecap="round" opacity="0.45"/><line x1="460" y1="624" x2="510" y2="744" stroke="#F2C14E" stroke-width="5" stroke-linecap="round" opacity="0.45"/><line x1="380" y1="640" x2="380" y2="770" stroke="#F2C14E" stroke-width="5" stroke-linecap="round" opacity="0.45"/><line x1="300" y1="624" x2="250" y2="744" stroke="#F2C14E" stroke-width="5" stroke-linecap="round" opacity="0.45"/><line x1="232" y1="578" x2="140" y2="670" stroke="#F2C14E" stroke-width="5" stroke-linecap="round" opacity="0.45"/><line x1="186" y1="510" x2="66" y2="560" stroke="#F2C14E" stroke-width="5" stroke-linecap="round" opacity="0.45"/><line x1="170" y1="430" x2="40" y2="430" stroke="#F2C14E" stroke-width="5" stroke-linecap="round" opacity="0.45"/><line x1="186" y1="350" x2="66" y2="300" stroke="#F2C14E" stroke-width="5" stroke-linecap="round" opacity="0.45"/><line x1="232" y1="282" x2="140" y2="190" stroke="#F2C14E" stroke-width="5" stroke-linecap="round" opacity="0.45"/><line x1="300" y1="236" x2="250" y2="116" stroke="#F2C14E" stroke-width="5" stroke-linecap="round" opacity="0.45"/><line x1="380" y1="220" x2="380" y2="90" stroke="#F2C14E" stroke-width="5" stroke-linecap="round" opacity="0.45"/><line x1="460" y1="236" x2="510" y2="116" stroke="#F2C14E" stroke-width="5" stroke-linecap="round" opacity="0.45"/><line x1="528" y1="282" x2="620" y2="190" stroke="#F2C14E" stroke-width="5" stroke-linecap="round" opacity="0.45"/><line x1="574" y1="350" x2="694" y2="300" stroke="#F2C14E" stroke-width="5" stroke-linecap="round" opacity="0.45"/><path d="M320 200 L440 200 L430 250 Q560 300 560 450 Q560 600 380 620 Q200 600 200 450 Q200 300 330 250 Z" fill="#9A5B34"/><rect x="300" y="186" width="160" height="28" rx="14" fill="#7E4626"/><path d="M260 330 Q300 300 340 320" fill="none" stroke="#B87447" stroke-width="10" stroke-linecap="round"/><path d="M420 270 L400 340 L440 380 L410 450" fill="none" stroke="#F8DA8C" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><path d="M250 420 L300 450 L285 510" fill="none" stroke="#F8DA8C" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><path d="M500 400 L470 470 L510 520 L490 580" fill="none" stroke="#F8DA8C" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="380" cy="200" rx="70" ry="14" fill="#F8DA8C"/></g></svg>
+</div>
+<aside>2. DESPERTE A CONSCIÊNCIA DA PRESENÇA
+2 Coríntios 4:7 — “Temos, porém, esse tesouro em vasos de barro, para mostrar que este poder que a tudo excede provém de Deus, e não de nós.”
+
+Por muitos anos, cantamos e oramos: “Senhor, entra neste lugar!” Mas, em Jesus, nós já estamos na Presença!
+
+Na Antiga Aliança, a Presença era externa. Ela estava na arca, no tabernáculo, no templo. Na Nova Aliança, a Presença é interna. Ela habita em você!
+
+A grande questão não é SE Deus está aqui. A grande questão é: o quanto você tem consciência disso?</aside>
+</section>
+
+<section id="photizo" class="">
+<div class="split">
+<div class="txt">
+<p class="eyebrow a1">III · 2. Desperte a consciência</p>
+<h2 class="t a1">Photizo</h2>
+<p class="ref a2">Efésios 1:18</p>
+<p class="punch a3">Trazer luz · fazer brilhar ·<br>tornar visível o que <b class="g">já existe</b></p>
+<p class="tag a4">Você não é visitante da Presença — é <b>hospedeiro</b> dela!</p>
+</div>
+<svg class="art" viewBox="0 0 760 760" width="760" height="760" xmlns="http://www.w3.org/2000/svg" aria-label="Luz que se acende e revela uma pomba que já estava ali"><defs><linearGradient id="lpbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0B0F1A"/><stop offset="1" stop-color="#141B2C"/></linearGradient><clipPath id="lpc"><rect width="760" height="760" rx="48"/></clipPath></defs><g clip-path="url(#lpc)"><rect width="760" height="760" fill="url(#lpbg)"/><defs><linearGradient id="lpcone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F2C14E" stop-opacity="0.75"/><stop offset="1" stop-color="#F2C14E" stop-opacity="0.08"/></linearGradient></defs><line x1="380" y1="0" x2="380" y2="150" stroke="#C9C2B4" stroke-width="5"/><polygon points="320,190 440,190 720,760 40,760" fill="url(#lpcone)"/><path d="M300 200 L460 200 L420 140 L340 140 Z" fill="#E07A2E"/><ellipse cx="380" cy="204" rx="34" ry="14" fill="#F8DA8C"/><ellipse cx="380" cy="470" rx="88" ry="32" fill="#F5EEE2"/><circle cx="463" cy="451" r="24" fill="#F5EEE2"/><path d="M482 448 L514 457 L482 464 Z" fill="#F2C14E"/><path d="M303 470 L220 438 L233 486 L220 515 Z" fill="#F5EEE2"/><path d="M364 457 C300 294 444 230 444 454 Z" fill="#F5EEE2"/><path d="M380 454 C236 342 284 278 348 451 Z" fill="#F5EEE2" opacity="0.7"/><ellipse cx="380" cy="700" rx="230" ry="26" fill="#F2C14E" opacity="0.35"/></g></svg>
+</div>
+<aside>Efésios 1:18 — “Oro também para que os olhos do coração de vocês sejam iluminados…”
+
+A palavra “iluminados” vem do grego photizo: trazer luz, fazer brilhar, tornar visível o que já existe.
+
+Despertar para a Presença é Deus acendendo a luz dentro de você para que você veja quem já está aí!
+
+VOCÊ NÃO É UM VISITANTE DA PRESENÇA, VOCÊ É UM HOSPEDEIRO DELA!</aside>
+</section>
+
+<section id="gloria" class="">
+<div class="split">
+<div class="txt">
+<p class="eyebrow a1">III · 2. Desperte a consciência</p>
+<h2 class="t a1">Uma glória que cresce</h2>
+<p class="ref a2">2 Coríntios 3:17</p>
+<p class="punch a3">Moisés: o brilho do rosto desvanecia.<br>A nossa glória não se apaga — <b class="g">cresce</b>!</p>
+<p class="tag a4">“Santo, Santo, Santo” — sempre algo novo para ver.</p>
+</div>
+<svg class="art" viewBox="0 0 760 760" width="760" height="760" xmlns="http://www.w3.org/2000/svg" aria-label="Monte iluminado por uma glória que brilha no topo"><defs><linearGradient id="mtbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#121A2C"/><stop offset="1" stop-color="#2B2235"/></linearGradient><clipPath id="mtc"><rect width="760" height="760" rx="48"/></clipPath></defs><g clip-path="url(#mtc)"><rect width="760" height="760" fill="url(#mtbg)"/><circle cx="484" cy="201" r="2.5" fill="#F5EEE2" opacity="0.35"/><circle cx="200" cy="13" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="484" cy="51" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="641" cy="30" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="730" cy="241" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="182" cy="131" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="145" cy="269" r="1.5" fill="#F5EEE2" opacity="0.8"/><circle cx="402" cy="62" r="2.5" fill="#F5EEE2" opacity="0.35"/><circle cx="700" cy="124" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="283" cy="117" r="3" fill="#F5EEE2" opacity="0.5"/><circle cx="359" cy="32" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="15" cy="220" r="1.5" fill="#F5EEE2" opacity="0.5"/><circle cx="513" cy="81" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="444" cy="67" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="602" cy="111" r="2" fill="#F5EEE2" opacity="0.5"/><circle cx="18" cy="52" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="27" cy="266" r="1.5" fill="#F5EEE2" opacity="0.8"/><circle cx="518" cy="285" r="2" fill="#F5EEE2" opacity="0.5"/><circle cx="80" cy="213" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="105" cy="84" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="746" cy="31" r="1.5" fill="#F5EEE2" opacity="0.5"/><circle cx="578" cy="86" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="599" cy="27" r="1.5" fill="#F5EEE2" opacity="0.8"/><circle cx="422" cy="131" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="527" cy="32" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="544" cy="299" r="1.5" fill="#F5EEE2" opacity="0.5"/><circle cx="122" cy="197" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="421" cy="111" r="1.5" fill="#F5EEE2" opacity="0.5"/><circle cx="632" cy="178" r="1.5" fill="#F5EEE2" opacity="0.5"/><circle cx="124" cy="119" r="2" fill="#F5EEE2" opacity="0.5"/><defs><radialGradient id="mtg380230"><stop offset="0" stop-color="#F2C14E" stop-opacity="0.55"/><stop offset="1" stop-color="#F2C14E" stop-opacity="0"/></radialGradient></defs><circle cx="380" cy="230" r="300" fill="url(#mtg380230)"/><line x1="314" y1="206" x2="173" y2="155" stroke="#F2C14E" stroke-width="6" stroke-linecap="round" opacity="0.6"/><line x1="323" y1="189" x2="201" y2="102" stroke="#F2C14E" stroke-width="6" stroke-linecap="round" opacity="0.6"/><line x1="336" y1="176" x2="242" y2="59" stroke="#F2C14E" stroke-width="6" stroke-linecap="round" opacity="0.6"/><line x1="352" y1="166" x2="292" y2="28" stroke="#F2C14E" stroke-width="6" stroke-linecap="round" opacity="0.6"/><line x1="370" y1="161" x2="349" y2="12" stroke="#F2C14E" stroke-width="6" stroke-linecap="round" opacity="0.6"/><line x1="389" y1="161" x2="409" y2="12" stroke="#F2C14E" stroke-width="6" stroke-linecap="round" opacity="0.6"/><line x1="407" y1="166" x2="466" y2="27" stroke="#F2C14E" stroke-width="6" stroke-linecap="round" opacity="0.6"/><line x1="424" y1="175" x2="517" y2="58" stroke="#F2C14E" stroke-width="6" stroke-linecap="round" opacity="0.6"/><line x1="437" y1="189" x2="558" y2="101" stroke="#F2C14E" stroke-width="6" stroke-linecap="round" opacity="0.6"/><line x1="446" y1="205" x2="586" y2="153" stroke="#F2C14E" stroke-width="6" stroke-linecap="round" opacity="0.6"/><path d="M0 760 L0 640 L210 470 L300 520 L380 250 L470 430 L560 380 L760 600 L760 760 Z" fill="#3A3048"/><path d="M380 250 L430 350 L400 340 L370 380 L350 330 L330 340 Z" fill="#F5EEE2" opacity="0.9"/><path d="M0 760 L0 690 L300 640 L560 700 L760 660 L760 760 Z" fill="#1A1424"/></g></svg>
+</div>
+<aside>Moisés descia do monte com o rosto brilhando, mas aquela glória desvanecia. A nossa glória não se apaga, ela cresce!
+
+2 Coríntios 3:17 — “Ora, o Senhor é o Espírito e, onde está o Espírito do Senhor, ali há liberdade.”
+
+E essa consciência é inesgotável! Os seres celestiais clamam “Santo, Santo, Santo” sem cessar. Talvez seja porque, a cada vez que olham para Deus, enxergam algo que ainda não tinham visto.</aside>
+</section>
+
+<section id="encontro" class="ember" data-transition="fade">
+<div class="stmt">
+<div class="stmt-txt"><h2 class="big a1">O secreto nunca é rotina, o secreto é encontro!</h2>
+<p class="stmt-sub a2">Declare comigo: “Eu não estou sozinho. O Deus Trino habita em mim!”</p>
+</div>
+<svg class="art" viewBox="0 0 480 480" width="480" height="480" xmlns="http://www.w3.org/2000/svg" aria-label="Chama"><path d="M240 470 C114 470 82 344 156 239 C177 312 208 323 208 323 C188 197 240 124 261 50 C282 155 387 197 366 334 C398 312 398 270 387 250 C440 354 376 470 240 470 Z" fill="#0F1724"/><path d="M240 470 C166 470 146 386 198 312 C208 365 240 365 240 365 C230 281 272 239 282 197 C303 281 356 312 324 407 C324 449 292 470 240 470 Z" fill="#F2C14E"/><path d="M240 470 C208 470 198 428 224 386 C240 407 261 354 266 334 C287 386 292 449 240 470 Z" fill="#F5EEE2"/></svg>
+</div>
+<aside>O SECRETO NUNCA É ROTINA, O SECRETO É ENCONTRO!
+
+Declare comigo: “Eu não estou sozinho. O Deus Trino habita em mim!”</aside>
+</section>
+
+<section id="madrugada" class="" data-transition="fade">
+<div class="split">
+<div class="txt">
+<p class="eyebrow a1">III · 3. O secreto todos os dias</p>
+<h2 class="t a1">De madrugada</h2>
+<p class="ref a2">Marcos 1:35</p>
+<p class="punch a3">Daniel: 3 vezes ao dia.<br>Jesus: de madrugada.</p>
+<p class="tag a4">Quem não marca hora com Deus vive de encontros acidentais!</p>
+</div>
+<svg class="art" viewBox="0 0 760 760" width="760" height="760" xmlns="http://www.w3.org/2000/svg" aria-label="De madrugada, alguém ora sozinho no alto de um monte"><defs><linearGradient id="dwbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0E1426"/><stop offset="1" stop-color="#E07A2E"/></linearGradient><clipPath id="dwc"><rect width="760" height="760" rx="48"/></clipPath></defs><g clip-path="url(#dwc)"><rect width="760" height="760" fill="url(#dwbg)"/><circle cx="275" cy="158" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="246" cy="85" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="201" cy="76" r="1.5" fill="#F5EEE2" opacity="0.8"/><circle cx="229" cy="160" r="1.5" fill="#F5EEE2" opacity="0.5"/><circle cx="139" cy="17" r="2.5" fill="#F5EEE2" opacity="0.35"/><circle cx="96" cy="144" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="457" cy="81" r="2.5" fill="#F5EEE2" opacity="0.5"/><circle cx="249" cy="259" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="382" cy="230" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="130" cy="187" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="469" cy="293" r="2" fill="#F5EEE2" opacity="0.5"/><circle cx="703" cy="237" r="2" fill="#F5EEE2" opacity="0.5"/><circle cx="217" cy="101" r="2.5" fill="#F5EEE2" opacity="0.5"/><circle cx="390" cy="245" r="2.5" fill="#F5EEE2" opacity="0.8"/><circle cx="296" cy="212" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="512" cy="291" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="251" cy="109" r="2.5" fill="#F5EEE2" opacity="0.35"/><circle cx="85" cy="230" r="3" fill="#F5EEE2" opacity="0.5"/><circle cx="12" cy="227" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="155" cy="264" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="269" cy="91" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="267" cy="189" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="655" cy="201" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="627" cy="131" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="642" cy="31" r="1.5" fill="#F5EEE2" opacity="0.5"/><circle cx="607" cy="184" r="2" fill="#F5EEE2" opacity="0.5"/><circle cx="207" cy="94" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="181" cy="45" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="619" cy="294" r="1.5" fill="#F5EEE2" opacity="0.5"/><circle cx="361" cy="57" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="328" cy="72" r="3" fill="#F5EEE2" opacity="0.5"/><circle cx="285" cy="299" r="1.5" fill="#F5EEE2" opacity="0.5"/><circle cx="544" cy="197" r="1.5" fill="#F5EEE2" opacity="0.35"/><circle cx="337" cy="181" r="2" fill="#F5EEE2" opacity="0.5"/><circle cx="583" cy="282" r="3" fill="#F5EEE2" opacity="0.35"/><circle cx="695" cy="116" r="2.5" fill="#F5EEE2" opacity="0.35"/><circle cx="395" cy="266" r="2" fill="#F5EEE2" opacity="0.8"/><circle cx="159" cy="142" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="230" cy="142" r="3" fill="#F5EEE2" opacity="0.8"/><circle cx="251" cy="192" r="2" fill="#F5EEE2" opacity="0.8"/><defs><radialGradient id="dwg380640"><stop offset="0" stop-color="#F2C14E" stop-opacity="0.6"/><stop offset="1" stop-color="#F2C14E" stop-opacity="0"/></radialGradient></defs><circle cx="380" cy="640" r="330" fill="url(#dwg380640)"/><path d="M0 760 L0 600 Q380 470 760 600 L760 760 Z" fill="#0A0D17"/><circle cx="384" cy="422" r="18" fill="#0A0D17"/><path d="M370 441 Q342 480 343 525 L325 540 L422 540 L415 520 L376 514 Q378 488 400 468 L404 450 Q392 438 370 441 Z" fill="#0A0D17"/><circle cx="590" cy="150" r="7" fill="#F5EEE2"/></g></svg>
+</div>
+<aside>3. DESPERTE PARA O SECRETO TODOS OS DIAS
+Marcos 1:35 — “De madrugada, quando ainda estava escuro, Jesus levantou-se, saiu de casa e foi para um lugar deserto, onde ficou orando.”
+
+Daniel orava três vezes ao dia. Jesus se retirava de madrugada. Intimidade não acontece por acaso, acontece por intencionalidade.
+
+QUEM NÃO MARCA HORA COM DEUS, VIVE DE ENCONTROS ACIDENTAIS!</aside>
+</section>
+
+<section id="rotina">
+<p class="eyebrow a1">III · 3. O secreto todos os dias</p>
+<h2 class="t a1">Comece e termine com Ele</h2>
+<div class="duo">
+<div class="half night a2"><svg viewBox="0 0 240 240" width="240" height="240" xmlns="http://www.w3.org/2000/svg" aria-label="Lua sonolenta"><rect width="240" height="240" rx="40" fill="#1A2436"/><circle cx="110" cy="130" r="62" fill="#DCE4F2"/><circle cx="140" cy="108" r="58" fill="#1A2436"/><path d="M150 90 h25 l-25 25 h25" fill="none" stroke="#F2C14E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/><path d="M182 55 h19 l-19 19 h19" fill="none" stroke="#F2C14E" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="1"/><path d="M207 26 h14 l-14 14 h14" fill="none" stroke="#F2C14E" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="1"/></svg><h3 class="ct">Antes de dormir</h3><p class="cs">Telas de lado.<br>“Espírito Santo, lidere meu sono e meus sonhos.”</p></div>
+<div class="half day a3"><svg viewBox="0 0 240 240" width="240" height="240" xmlns="http://www.w3.org/2000/svg" aria-label="Sol nascendo"><rect width="240" height="240" rx="40" fill="#1A2436"/><circle cx="120" cy="170" r="56" fill="#F2C14E"/><rect x="0" y="170" width="240" height="70" fill="#1A2436"/><rect x="30" y="168" width="180" height="10" rx="5" fill="#E07A2E"/><line x1="120" y1="90" x2="120" y2="60" stroke="#F2C14E" stroke-width="10" stroke-linecap="round"/><line x1="60" y1="120" x2="38" y2="100" stroke="#F2C14E" stroke-width="10" stroke-linecap="round"/><line x1="180" y1="120" x2="202" y2="100" stroke="#F2C14E" stroke-width="10" stroke-linecap="round"/></svg><h3 class="ct">Ao acordar</h3><p class="cs">Primeiro pensamento:<br>“Bom dia, Espírito Santo!”</p></div>
+</div>
+<aside>Comece e termine o seu dia com Ele. Antes de dormir, deixe as telas de lado e ore:
+
+“Espírito Santo, me dê consciência da Presença de Jesus agora que estou prestes a dormir. Lidere meu sono e meus sonhos. Ministre em mim.”
+
+E quando acordar, que seu primeiro pensamento seja: “Bom dia, Espírito Santo!”</aside>
+</section>
+
+<section id="pratica">
+<p class="eyebrow a1">III · 3. O secreto todos os dias</p>
+<h2 class="t a1">Tenha…</h2>
+<div class="cards"><div class="card a1"><svg viewBox="0 0 240 240" width="240" height="240" xmlns="http://www.w3.org/2000/svg" aria-label="Um lugar"><rect width="240" height="240" rx="40" fill="#1A2436"/><rect x="60" y="60" width="120" height="90" rx="22" fill="#E07A2E"/><rect x="44" y="120" width="40" height="70" rx="16" fill="#B85A1A"/><rect x="156" y="120" width="40" height="70" rx="16" fill="#B85A1A"/><rect x="74" y="140" width="92" height="40" rx="10" fill="#E07A2E"/><rect x="56" y="186" width="12" height="24" fill="#C9C2B4"/><rect x="172" y="186" width="12" height="24" fill="#C9C2B4"/></svg><h3 class="ct">Um lugar</h3><p class="cs">quarto, poltrona, tapete</p></div><div class="card a2"><svg viewBox="0 0 240 240" width="240" height="240" xmlns="http://www.w3.org/2000/svg" aria-label="Um horário"><rect width="240" height="240" rx="40" fill="#1A2436"/><circle cx="120" cy="125" r="78" fill="#F5EEE2"/><circle cx="120" cy="125" r="78" fill="none" stroke="#F2C14E" stroke-width="10"/><line x1="120" y1="125" x2="120" y2="78" stroke="#1A2436" stroke-width="10" stroke-linecap="round"/><line x1="120" y1="125" x2="152" y2="140" stroke="#1A2436" stroke-width="10" stroke-linecap="round"/></svg><h3 class="ct">Um horário</h3></div><div class="card a3"><svg viewBox="0 0 240 240" width="240" height="240" xmlns="http://www.w3.org/2000/svg" aria-label="Um caderno"><rect width="240" height="240" rx="40" fill="#1A2436"/><rect x="58" y="40" width="130" height="164" rx="12" fill="#F5EEE2"/><rect x="58" y="40" width="26" height="164" rx="8" fill="#E07A2E"/><line x1="100" y1="80" x2="170" y2="80" stroke="#8A7F70" stroke-width="6" stroke-linecap="round"/><line x1="100" y1="110" x2="170" y2="110" stroke="#8A7F70" stroke-width="6" stroke-linecap="round"/><line x1="100" y1="140" x2="170" y2="140" stroke="#8A7F70" stroke-width="6" stroke-linecap="round"/><line x1="100" y1="170" x2="170" y2="170" stroke="#8A7F70" stroke-width="6" stroke-linecap="round"/></svg><h3 class="ct">Um caderno</h3><p class="cs">para escrever o que Deus falar</p></div></div>
+<div class="declare a4"><p class="dl">DECLARE COMIGO</p><p class="dq">Eu escolho despertar! Eu escolho o secreto! <span class="dref">· Lucas 11:13</span></p></div>
+<aside>Tenha um lugar: um quarto, uma poltrona, um tapete. Tenha um horário. Tenha um caderno, para escrever o que Deus falar.
+
+Lucas 11:13 — “Se vocês, apesar de serem maus, sabem dar boas coisas aos seus filhos, quanto mais o Pai que está nos céus dará o Espírito Santo a quem o pedir!”
+
+Declare comigo: “Eu escolho despertar! Eu escolho o secreto!”</aside>
+</section>
+
+<section id="eden" class="light" data-transition="fade">
+<div class="split">
+<div class="txt">
+<p class="eyebrow a1">Conclusão</p>
+<h2 class="t a1">O novo Éden</h2>
+<p class="ref a2">Ezequiel 36:26</p>
+<p class="punch a3">Deus caminha com você no jardim da intimidade.</p>
+<div class="hearts a4"><svg viewBox="0 0 240 240" width="240" height="240" xmlns="http://www.w3.org/2000/svg" aria-label="Coração de pedra"><rect width="240" height="240" rx="40" fill="#1A2436"/><path d="M120 200 C40 140 30 90 60 66 C88 44 115 62 120 84 C125 62 152 44 180 66 C210 90 200 140 120 200 Z" fill="#7A7F8C"/><path d="M120 84 L108 120 L132 140 L114 176" fill="none" stroke="#3A3F4C" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg><x-shape kind="arrow-right" class="hr"></x-shape><svg viewBox="0 0 240 240" width="240" height="240" xmlns="http://www.w3.org/2000/svg" aria-label="Deleite"><rect width="240" height="240" rx="40" fill="#1A2436"/><path d="M120 200 C40 140 30 90 60 66 C88 44 115 62 120 84 C125 62 152 44 180 66 C210 90 200 140 120 200 Z" fill="#E07A2E"/></svg></div>
+</div>
+<svg class="art" viewBox="0 0 760 760" width="760" height="760" xmlns="http://www.w3.org/2000/svg" aria-label="Jardim com uma árvore, ao entardecer"><defs><linearGradient id="edbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F2C97E"/><stop offset="1" stop-color="#D98A4A"/></linearGradient><clipPath id="edc"><rect width="760" height="760" rx="48"/></clipPath></defs><g clip-path="url(#edc)"><rect width="760" height="760" fill="url(#edbg)"/><circle cx="560" cy="200" r="80" fill="#F8E2A8"/><path d="M0 760 L0 560 Q200 500 400 540 Q600 580 760 520 L760 760 Z" fill="#5E7A4A"/><path d="M0 760 L0 640 Q260 600 460 640 Q620 670 760 630 L760 760 Z" fill="#46623A"/><path d="M245 600 C240 520 230 450 220 380 L260 380 C262 450 270 520 285 600 Z" fill="#4A3020"/><circle cx="240" cy="300" r="110" fill="#2F5A3A"/><circle cx="160" cy="340" r="80" fill="#2F5A3A"/><circle cx="320" cy="340" r="85" fill="#2F5A3A"/><circle cx="200" cy="240" r="80" fill="#2F5A3A"/><circle cx="290" cy="250" r="75" fill="#2F5A3A"/><circle cx="200" cy="300" r="12" fill="#E07A2E"/><circle cx="300" cy="280" r="12" fill="#E07A2E"/><circle cx="250" cy="360" r="12" fill="#E07A2E"/><circle cx="170" cy="360" r="12" fill="#E07A2E"/><path d="M380 150 q40 -24 80 0 t80 0" fill="none" stroke="#FBF3E2" stroke-width="5" stroke-linecap="round" opacity="0.8"/><path d="M420 190 q40 -24 80 0 t80 0" fill="none" stroke="#FBF3E2" stroke-width="5" stroke-linecap="round" opacity="0.8"/><circle cx="531" cy="545" r="14" fill="#2A3A24"/><path d="M520 561 Q497 592 498 628 L484 640 L562 640 L556 624 L525 620 Q526 598 544 582 L548 568 Q538 558 520 561 Z" fill="#2A3A24"/></g></svg>
+</div>
+<aside>CONCLUSÃO
+Deus é inesgotável e quer Se revelar a nós todos os dias.
+
+O lugar secreto é o nosso novo Éden. Assim como Deus descia na viração do dia para estar com Adão e Eva, hoje Ele deseja caminhar com você no jardim da intimidade.
+
+Ezequiel 36:26 — “Darei a vocês um coração novo e porei um espírito novo em vocês; tirarei de vocês o coração de pedra e lhes darei um coração de carne.”
+
+Na intimidade, ganhamos vida e destino. Ninguém volta do secreto do mesmo jeito.</aside>
+</section>
+
+<section id="fogo" class="ember" data-transition="fade">
+<div class="stmt">
+<div class="stmt-txt"><h2 class="big a1">Que o fogo nunca se apague!</h2>
+<p class="stmt-sub a2">Ninguém volta do secreto do mesmo jeito.</p>
+</div>
+<svg class="art" viewBox="0 0 480 480" width="480" height="480" xmlns="http://www.w3.org/2000/svg" aria-label="Chama"><path d="M240 470 C114 470 82 344 156 239 C177 312 208 323 208 323 C188 197 240 124 261 50 C282 155 387 197 366 334 C398 312 398 270 387 250 C440 354 376 470 240 470 Z" fill="#0F1724"/><path d="M240 470 C166 470 146 386 198 312 C208 365 240 365 240 365 C230 281 272 239 282 197 C303 281 356 312 324 407 C324 449 292 470 240 470 Z" fill="#F2C14E"/><path d="M240 470 C208 470 198 428 224 386 C240 407 261 354 266 334 C287 386 292 449 240 470 Z" fill="#F5EEE2"/></svg>
+</div>
+<aside>Na intimidade, ganhamos vida e destino. Ninguém volta do secreto do mesmo jeito.
+
+QUE O FOGO NUNCA SE APAGUE!</aside>
+</section>
+
+<section id="apelo" class="">
+<div class="split">
+<div class="txt">
+<p class="eyebrow a1">Apelo · Olhe pra mim!</p>
+<h2 class="t a1">Você está desperto?</h2>
+
+<p class="punch a3">Há quanto tempo você não tem fome de Deus?<br>Há quanto tempo você não queima no secreto?</p>
+<p class="tag a4">Ou está dormindo dentro da igreja?</p>
+</div>
+<svg class="art" viewBox="0 0 760 760" width="760" height="760" xmlns="http://www.w3.org/2000/svg" aria-label="Um olho desperto com uma chama no centro"><defs><linearGradient id="apbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0E1426"/><stop offset="1" stop-color="#1A2436"/></linearGradient><clipPath id="apc"><rect width="760" height="760" rx="48"/></clipPath></defs><g clip-path="url(#apc)"><rect width="760" height="760" fill="url(#apbg)"/><defs><radialGradient id="apg380380"><stop offset="0" stop-color="#E07A2E" stop-opacity="0.35"/><stop offset="1" stop-color="#E07A2E" stop-opacity="0"/></radialGradient></defs><circle cx="380" cy="380" r="340" fill="url(#apg380380)"/><path d="M80 380 Q380 120 680 380 Q380 640 80 380 Z" fill="none" stroke="#F5EEE2" stroke-width="12"/><circle cx="380" cy="380" r="110" fill="#E07A2E"/><path d="M380 450 C330 450 317 400 346 358 C355 387 367 391 367 391 C359 341 380 311 388 282 C397 324 439 341 430 395 C443 387 443 370 439 362 C460 404 435 450 380 450 Z" fill="#E07A2E"/><path d="M380 450 C351 450 342 416 363 387 C367 408 380 408 380 408 C376 374 393 358 397 341 C405 374 426 387 414 425 C414 442 401 450 380 450 Z" fill="#F2C14E"/><path d="M380 450 C367 450 363 433 374 416 C380 425 388 404 390 395 C399 416 401 442 380 450 Z" fill="#F5EEE2"/></g></svg>
+</div>
+<aside>APELO
+Agora olhe pra mim!
+
+Você está desperto? Ou está dormindo dentro da igreja?
+Há quanto tempo você não tem fome de Deus?
+Há quanto tempo você não queima no secreto?</aside>
+</section>
+
+<section id="hoje">
+<p class="eyebrow a1">Apelo</p>
+<h2 class="t a1">Hoje é o seu dia</h2>
+<div class="cards"><div class="card a1"><svg viewBox="0 0 240 240" width="240" height="240" xmlns="http://www.w3.org/2000/svg" aria-label="Encontro com Jesus"><rect width="240" height="240" rx="40" fill="#1A2436"/><defs><radialGradient id="icrg120120"><stop offset="0" stop-color="#F2C14E" stop-opacity="0.5"/><stop offset="1" stop-color="#F2C14E" stop-opacity="0"/></radialGradient></defs><circle cx="120" cy="120" r="100" fill="url(#icrg120120)"/><rect x="108" y="40" width="24" height="160" rx="6" fill="#F5EEE2"/><rect x="66" y="82" width="108" height="24" rx="6" fill="#F5EEE2"/></svg><h3 class="ct">Nunca teve um encontro?</h3><p class="cs">Creia e confesse: Jesus é o Senhor</p></div><div class="card a2"><svg viewBox="0 0 240 240" width="240" height="240" xmlns="http://www.w3.org/2000/svg" aria-label="Brasa que reacende"><rect width="240" height="240" rx="40" fill="#1A2436"/><path d="M120 210 C70 210 57 160 86 118 C95 147 107 151 107 151 C99 101 120 71 128 42 C137 84 179 101 170 155 C183 147 183 130 179 122 C200 164 175 210 120 210 Z" fill="#E07A2E"/><path d="M120 210 C91 210 82 176 103 147 C107 168 120 168 120 168 C116 134 133 118 137 101 C145 134 166 147 154 185 C154 202 141 210 120 210 Z" fill="#F2C14E"/><path d="M120 210 C107 210 103 193 114 176 C120 185 128 164 130 155 C139 176 141 202 120 210 Z" fill="#F5EEE2"/></svg><h3 class="ct">O fogo esfriou?</h3><p class="cs">Deus quer reacender a chama</p></div></div>
+
+<aside>Talvez você nunca tenha tido um encontro verdadeiro com Jesus. Hoje é o seu dia! Creia em seu coração e confesse com a sua boca que Jesus é o Senhor.
+
+Talvez você já tenha queimado um dia, e o fogo esfriou. Hoje Deus quer reacender a chama!</aside>
+</section>
+
+<section id="oracao" class="">
+<div class="split">
+<div class="txt">
+<p class="eyebrow a1">Oração</p>
+<h2 class="t a1">Eu quero mais de Ti!</h2>
+
+<p class="punch a3">“Deus, eu não sei explicar. Mas eu sei que preciso do Teu Espírito!”</p>
+<p class="tag a4">Desperta em mim a fome · desperta em mim a consciência da Tua Presença</p>
+</div>
+<svg class="art" viewBox="0 0 760 760" width="760" height="760" xmlns="http://www.w3.org/2000/svg" aria-label="Pessoa ajoelhada em oração sob uma chama"><defs><linearGradient id="prbg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#12182A"/><stop offset="1" stop-color="#3A2230"/></linearGradient><clipPath id="prc"><rect width="760" height="760" rx="48"/></clipPath></defs><g clip-path="url(#prc)"><rect width="760" height="760" fill="url(#prbg)"/><defs><radialGradient id="prg380360"><stop offset="0" stop-color="#F2C14E" stop-opacity="0.5"/><stop offset="1" stop-color="#F2C14E" stop-opacity="0"/></radialGradient></defs><circle cx="380" cy="360" r="340" fill="url(#prg380360)"/><path d="M380 300 C326 300 312 246 344 201 C353 232 366 237 366 237 C358 183 380 152 389 120 C398 165 443 183 434 242 C448 232 448 214 443 206 C466 250 438 300 380 300 Z" fill="#E07A2E"/><path d="M380 300 C348 300 340 264 362 232 C366 255 380 255 380 255 C376 219 394 201 398 183 C407 219 430 232 416 273 C416 291 402 300 380 300 Z" fill="#F2C14E"/><path d="M380 300 C366 300 362 282 373 264 C380 273 389 250 391 242 C400 264 402 291 380 300 Z" fill="#F5EEE2"/><rect x="0" y="620" width="760" height="140" fill="#0A0D17"/><circle cx="353" cy="415" r="31" fill="#0A0D17"/><path d="M330 448 Q281 516 283 594 L252 620 L421 620 L408 586 L340 576 Q343 529 382 495 L390 464 Q369 443 330 448 Z" fill="#0A0D17"/></g></svg>
+</div>
+<aside>Faça comigo a oração daquele jovem de 16 anos:
+
+“Deus, eu não sei explicar. Mas eu sei que preciso do Teu Espírito! Desperta em mim a fome, desperta em mim a consciência da Tua Presença. Eu quero mais de Ti!”
+
+Peça por desejo, e você verá o que significa um coração apaixonado!</aside>
+</section>
+
+</div></div>
+<div id="bar"></div>
+<div id="notes"></div>
+<div id="help">← → navegar · N notas · F tela cheia</div>
+<div id="hud">
+  <button id="prev" aria-label="Anterior">‹</button>
+  <span id="count"></span>
+  <button id="next" aria-label="Próximo">›</button>
+  <button id="nbtn" aria-label="Mostrar notas">Notas</button>
+  <button id="fbtn" aria-label="Tela cheia">⛶</button>
+</div>
+<script>
+(function () {
+  var deck = document.getElementById('deck');
+  var slides = Array.prototype.slice.call(deck.querySelectorAll(':scope > section'));
+  var n = slides.length, cur = 0;
+  var bar = document.getElementById('bar'), count = document.getElementById('count'), notes = document.getElementById('notes');
+
+  function fit() {
+    var s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+    deck.style.transform = 'scale(' + s + ')';
+  }
+  function show(i, push) {
+    i = Math.max(0, Math.min(n - 1, i));
+    slides[cur].classList.remove('active');
+    cur = i;
+    slides[cur].classList.add('active');
+    bar.style.width = ((cur + 1) / n * 100) + '%';
+    count.textContent = (cur + 1) + ' / ' + n;
+    var a = slides[cur].querySelector('aside');
+    notes.innerHTML = '';
+    var t = document.createElement('span'); t.className = 'nt'; t.textContent = 'Notas · slide ' + (cur + 1);
+    notes.appendChild(t);
+    notes.appendChild(document.createTextNode(a ? a.textContent.trim() : '—'));
+    if (push !== false) history.replaceState(null, '', '#' + (cur + 1));
+  }
+  function go(d) { show(cur + d); }
+  function fs() {
+    if (!document.fullscreenElement) (document.documentElement.requestFullscreen || function(){}).call(document.documentElement);
+    else document.exitFullscreen();
+  }
+  function toggleNotes() { document.body.classList.toggle('notes'); }
+
+  document.addEventListener('keydown', function (e) {
+    var k = e.key;
+    if (k === 'ArrowRight' || k === 'ArrowDown' || k === 'PageDown' || k === ' ' || k === 'Enter') { e.preventDefault(); go(1); }
+    else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp' || k === 'Backspace') { e.preventDefault(); go(-1); }
+    else if (k === 'Home') show(0);
+    else if (k === 'End') show(n - 1);
+    else if (k === 'f' || k === 'F') fs();
+    else if (k === 'n' || k === 'N') toggleNotes();
+  });
+  document.getElementById('stage').addEventListener('click', function (e) {
+    go(e.clientX > window.innerWidth / 3 ? 1 : -1);
+  });
+  document.getElementById('prev').onclick = function () { go(-1); };
+  document.getElementById('next').onclick = function () { go(1); };
+  document.getElementById('nbtn').onclick = toggleNotes;
+  document.getElementById('fbtn').onclick = fs;
+
+  var x0 = null;
+  document.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', function (e) {
+    if (x0 === null) return;
+    var dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if (Math.abs(dx) > 40) { go(dx < 0 ? 1 : -1); }
+  });
+
+  var hideT;
+  function poke() { document.body.classList.add('ui'); clearTimeout(hideT); hideT = setTimeout(function () { document.body.classList.remove('ui'); }, 2500); }
+  document.addEventListener('mousemove', poke); poke();
+
+  window.addEventListener('resize', fit);
+  window.addEventListener('hashchange', function () { var h = parseInt(location.hash.slice(1), 10); if (h && h - 1 !== cur) show(h - 1, false); });
+  fit();
+  var start = parseInt(location.hash.slice(1), 10);
+  slides[0].classList.add('active');
+  show(start ? start - 1 : 0, false);
+})();
+</script>
+</body>
+</html>
